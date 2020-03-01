@@ -1,0 +1,8 @@
+[config]
+
+# Get a bot token on this page:
+# https://discordapp.com/developers/applications
+token = <token here>
+
+# Uncomment this to have a trivia channel
+#triviachannel = <channel id>

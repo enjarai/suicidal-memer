@@ -616,6 +616,7 @@ async def helpiminfuckingdebt(ctx):
     else:
         await ctx.send("no ur not")
 
-client.loop.create_task(background())
+if channelid:
+    client.loop.create_task(background())
 # client.loop.create_task(background2())
 client.run(token)
