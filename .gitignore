@@ -114,4 +114,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-token.conf
+config.conf
+scores.json

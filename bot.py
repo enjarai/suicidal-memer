@@ -6,15 +6,19 @@ import random
 import asyncio
 import subprocess
 import operator
+import configparser
 client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
 
 global lastid
 lastid = {}
 
-token = ""
+config = configparser.ConfigParser()
+config.read_file(open("config.conf", "r"))
+token = config.get("config", "token")
+channelid = config.get("config", "triviachannel")
+
 triviamultiplier = 10
 levelcost = 60
-channelid = 581089730242936862
 lootboxtemplate = {
     "displayname": "Loot Box",
     "emoji": "<:lootbox:632286669592199217>",
@@ -380,6 +384,7 @@ async def use(ctx, *args):
                     embed = discord.Embed(title="Loot Box opened!", description="You got:", colour=discord.Colour(0x70a231))
                     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
                     for i in range(3):
+                        print(i)
                         addthis = random.choice(list(itemmax.keys()))
                         amount = random.randint(1, itemmax[addthis])
                         if addthis == "0":
