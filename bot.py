@@ -105,7 +105,7 @@ print("connecting...")
 
 
 def check(m):
-    return m.channel == client.get_channel(channelid) and not m.author.id == client.user.id
+    return m.channel == client.get_channel(int(channelid)) and not m.author.id == client.user.id
 
 async def equal_dicts(a, b, ignore_keys):
     ka = set(a).difference(ignore_keys)
@@ -140,7 +140,7 @@ async def hasitem(scores, userid, itemid):
 async def background():
     await client.wait_until_ready()
         #print(self.client)
-    channel = client.get_channel(channelid)
+    channel = client.get_channel(int(channelid))
         #print(channel)
         #print(self.channelid)
     while True:
