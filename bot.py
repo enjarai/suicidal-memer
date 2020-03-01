@@ -11,6 +11,7 @@ client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
 global lastid
 lastid = {}
 
+token = ""
 triviamultiplier = 10
 levelcost = 60
 channelid = 581089730242936862
@@ -612,4 +613,4 @@ async def helpiminfuckingdebt(ctx):
 
 client.loop.create_task(background())
 # client.loop.create_task(background2())
-client.run("NTgwOTgyOTY0MTI1NDMzODY3.XOYo5Q.xYzR1Ocx4cJVpD76FBokC32FJMc")
+client.run(token)
