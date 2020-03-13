@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "1.0",
+        ":regional_indicator_b:": "1.5",
+        ":regional_indicator_c:": "1.2",
+        ":regional_indicator_d:": "1.7"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "In which update were downwards-facing Dispensers added?"
+}

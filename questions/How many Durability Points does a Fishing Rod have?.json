@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "53",
+        ":regional_indicator_b:": "64",
+        ":regional_indicator_c:": "65",
+        ":regional_indicator_d:": "50"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "How many Durability Points does a Fishing Rod have?"
+}

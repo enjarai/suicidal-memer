@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Let a Skeleton kill a Creeper",
+        ":regional_indicator_b:": "Let a Creeper kill a Skeleton",
+        ":regional_indicator_c:": "A Stronghold chest",
+        ":regional_indicator_d:": "A Creeper has a 0.01% Chance to drop one"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Whats a way to obtain Music Disks?"
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Fern",
+        ":regional_indicator_b:": "Sweet Berry Bush",
+        ":regional_indicator_c:": "Chorus Plant",
+        ":regional_indicator_d:": "Sea Pickle"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "Which of these plants can't be bonemealed?"
+}

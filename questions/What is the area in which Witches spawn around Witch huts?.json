@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "9x7x9",
+        ":regional_indicator_b:": "9x9x9",
+        ":regional_indicator_c:": "7x7x7",
+        ":regional_indicator_d:": "7x9x7"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "What is the area in which Witches spawn around Witch huts?"
+}

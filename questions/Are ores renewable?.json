@@ -1,0 +1,10 @@
+{
+    "options": {
+        ":regional_indicator_a:": "No",
+        ":regional_indicator_b:": "Yes"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Are ores renewable?"
+}

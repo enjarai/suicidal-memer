@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "4",
+        ":regional_indicator_b:": "10",
+        ":regional_indicator_c:": "3",
+        ":regional_indicator_d:": "7"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Whats the vertical teleport radius of a Dragon Egg?"
+}

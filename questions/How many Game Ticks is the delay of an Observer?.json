@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "2",
+        ":regional_indicator_b:": "4",
+        ":regional_indicator_c:": "6",
+        ":regional_indicator_d:": "1"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "How many Game Ticks is the delay of an Observer?"
+}

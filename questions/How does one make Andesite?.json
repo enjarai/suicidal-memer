@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Granite & Cobblestone",
+        ":regional_indicator_b:": "Quartz & Diorite",
+        ":regional_indicator_c:": "Diorite & Cobblestone",
+        ":regional_indicator_d:": "Quartz & Granite"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "How does one make Andesite?"
+}

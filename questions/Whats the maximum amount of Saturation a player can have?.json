@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "40",
+        ":regional_indicator_b:": "5",
+        ":regional_indicator_c:": "10",
+        ":regional_indicator_d:": "20"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Whats the maximum amount of Saturation a player can have?"
+}

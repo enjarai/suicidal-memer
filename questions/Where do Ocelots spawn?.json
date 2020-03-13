@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Village",
+        ":regional_indicator_b:": "Plains",
+        ":regional_indicator_c:": "Jungle",
+        ":regional_indicator_d:": "Savanna"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "Where do Ocelots spawn?"
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Grass Path",
+        ":regional_indicator_b:": "Farmland",
+        ":regional_indicator_c:": "Frosted Ice",
+        ":regional_indicator_d:": "Coral Fans"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Which of these blocks is obtainable in Survival as an item?"
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "24",
+        ":regional_indicator_b:": "20",
+        ":regional_indicator_c:": "25",
+        ":regional_indicator_d:": "15"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "How many hits does it take to kill a Wither with a Smite V Diamond Sword?"
+}

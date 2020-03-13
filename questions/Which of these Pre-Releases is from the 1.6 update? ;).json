@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "1.4.7-pre",
+        ":regional_indicator_b:": "1.3.2-pre",
+        ":regional_indicator_c:": "1.6.3-pre",
+        ":regional_indicator_d:": "1.6-pre"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Which of these Pre-Releases is from the 1.6 update? ;)"
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "33",
+        ":regional_indicator_b:": "53",
+        ":regional_indicator_c:": "32",
+        ":regional_indicator_d:": "54"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "How many Durability Points does a Golden Sword have?"
+}

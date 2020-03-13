@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Bowl",
+        ":regional_indicator_b:": "Lily Pad",
+        ":regional_indicator_c:": "Ink Sac",
+        ":regional_indicator_d:": "Fishing Rod"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "Which of these items is in the Treasure category for fishing?"
+}

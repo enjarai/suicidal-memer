@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "The End",
+        ":regional_indicator_b:": "Uneasy Alliance",
+        ":regional_indicator_c:": "Beaconator",
+        ":regional_indicator_d:": "The Beginning"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Which of these is not an Advancement in the game?"
+}

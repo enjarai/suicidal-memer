@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "You can't",
+        ":regional_indicator_b:": "Feeding it more Golden Apples",
+        ":regional_indicator_c:": "Having other Villagers around it",
+        ":regional_indicator_d:": "Placing Beds around it"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "How can you speed up Zombie Villager curing?"
+}

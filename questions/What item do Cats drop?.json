@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Wheat",
+        ":regional_indicator_b:": "Nothing",
+        ":regional_indicator_c:": "Feather",
+        ":regional_indicator_d:": "String"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "What item do Cats drop?"
+}

@@ -7,6 +7,8 @@ import asyncio
 import subprocess
 import operator
 import configparser
+import glob
+import emoji
 client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
 
 global lastid
@@ -16,6 +18,13 @@ config = configparser.ConfigParser()
 config.read_file(open("config.conf", "r"))
 token = config.get("config", "token")
 channelid = config.get("config", "triviachannel")
+
+qdir = glob.glob("./questions/*.json")
+questions = []
+for i in qdir:
+    with open(i, "r") as f:
+        q = json.load(f)
+    questions.append(q)
 
 triviamultiplier = 10
 levelcost = 60
@@ -104,8 +113,8 @@ shopcosts = {
 print("connecting...")
 
 
-def check(m):
-    return m.channel == client.get_channel(int(channelid)) and not m.author.id == client.user.id
+def check(reaction, user):
+    return reaction.message.channel == client.get_channel(int(channelid)) and not user.id == client.user.id
 
 async def equal_dicts(a, b, ignore_keys):
     ka = set(a).difference(ignore_keys)
@@ -139,46 +148,47 @@ async def hasitem(scores, userid, itemid):
 
 async def background():
     await client.wait_until_ready()
-        #print(self.client)
     channel = client.get_channel(int(channelid))
-        #print(channel)
-        #print(self.channelid)
     while True:
         slp = random.randint(360, 600)
         print("Waiting {} seconds".format(slp))
         await asyncio.sleep(slp)
-        with open("./q.json", "r") as f:
-            questions = json.load(f)
-        q, a = random.choice(list(questions.items()))
-        embed = discord.Embed(title="Minecraft Trivia Question:", description=q, color=0x51e443)
-        embed.set_thumbnail(url="https://gamepedia.cursecdn.com/minecraft_gamepedia/0/01/Grass_Block_TextureUpdate.png?version=1ca0bc19a170181f1b2ecdfeeeabe9ff")
-        await channel.send(embed=embed)
+        q = random.choice(questions)
+        qstr = q["text"]
+        for k, i in q["options"].items():
+            qstr += "\n" + f"{k}: {i}"
+        embed = discord.Embed(title="Minecraft Trivia Question:", description=qstr, color=0x51e443)
+        embed.set_thumbnail(url="https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/minecraft-icon.png")
+        embedmsg = await channel.send(embed=embed)
+        for k, i in q["options"].items():
+            await embedmsg.add_reaction(emoji.emojize(k, use_aliases=True))
         tries = 0
         while True:
-            ua = await client.wait_for("message", check=check)
-            if ua.content.lower() in a:
+            ua = await client.wait_for("reaction_add", check=check)
+            if emoji.demojize(ua[0].emoji, use_aliases=True) in q["correct"]:
                 points = (10 - (2 * tries)) * triviamultiplier
-                embed=discord.Embed(description="Correct! {} has earned {} points!".format(ua.author, points))
+                embed=discord.Embed(description="🟢 {} has earned {} points!".format(ua[1], points))
                 await channel.send(embed=embed)
                 with open("scores.json", "r") as f:
                     scores = json.load(f)
-                if str(ua.author.id) in scores:
-                    if "score" in scores[str(ua.author.id)]:
-                        scores[str(ua.author.id)]["score"] += points
+                if str(ua[1].id) in scores:
+                    if "score" in scores[str(ua[1].id)]:
+                        scores[str(ua[1].id)]["score"] += points
                     else:
-                        scores[str(ua.author.id)]["score"] = points
+                        scores[str(ua[1].id)]["score"] = points
                 else:
-                    scores[str(ua.author.id)] = {}
-                    scores[str(ua.author.id)]["score"] = points
+                    scores[str(ua[1].id)] = {}
+                    scores[str(ua[1].id)]["score"] = points
                 if random.randint(1, 10) == 1:
-                    scores = await giveitem(scores, ua.author, lootboxtemplate, ua.channel, True, 1)
+                    scores = await giveitem(scores, ua[1], lootboxtemplate, ua[0].message.channel, True, 1)
                 with open("scores.json", "w") as f:
                     json.dump(scores, f, indent=4)
                 break
             else:
                 if tries < 4:
                     tries += 1
-                await ua.add_reaction("❌")
+                embed=discord.Embed(description="🔴 {} has answered wrongly!".format(ua[1]))
+                await channel.send(embed=embed)
 
 async def background2():
     await client.wait_until_ready()

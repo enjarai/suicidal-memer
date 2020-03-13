@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "12",
+        ":regional_indicator_b:": "10",
+        ":regional_indicator_c:": "15",
+        ":regional_indicator_d:": "8"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "How many armor points does the combination \"Diamond Boots, Chainmail Chestplate, Turtle Shell\" provide?"
+}

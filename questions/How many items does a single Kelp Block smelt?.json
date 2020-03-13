@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "24",
+        ":regional_indicator_b:": "16",
+        ":regional_indicator_c:": "20",
+        ":regional_indicator_d:": "10"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "How many items does a single Kelp Block smelt?"
+}

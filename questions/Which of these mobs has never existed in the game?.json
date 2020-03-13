@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Red Dragon",
+        ":regional_indicator_b:": "Beast Boy",
+        ":regional_indicator_c:": "Rana",
+        ":regional_indicator_d:": "Human"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Which of these mobs has never existed in the game?"
+}

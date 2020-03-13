@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Phantom",
+        ":regional_indicator_b:": "Slime Cube",
+        ":regional_indicator_c:": "Wither",
+        ":regional_indicator_d:": "Magma Cube"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "Which of these mobs does not have the Size NBT tag?"
+}

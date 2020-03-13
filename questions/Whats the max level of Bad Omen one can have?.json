@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "6",
+        ":regional_indicator_b:": "7",
+        ":regional_indicator_c:": "3",
+        ":regional_indicator_d:": "5"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Whats the max level of Bad Omen one can have?"
+}

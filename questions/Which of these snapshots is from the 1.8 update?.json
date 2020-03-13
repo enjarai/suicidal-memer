@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "15w31b",
+        ":regional_indicator_b:": "14w31a",
+        ":regional_indicator_c:": "16w06a",
+        ":regional_indicator_d:": "13w49a"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "Which of these snapshots is from the 1.8 update?"
+}

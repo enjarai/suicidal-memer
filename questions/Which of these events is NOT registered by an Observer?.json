@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Adding/removing items from a Brewing Stand",
+        ":regional_indicator_b:": "Activating a Beacon",
+        ":regional_indicator_c:": "Changes to block states of Fire",
+        ":regional_indicator_d:": "Playing a Note Block"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "Which of these events is NOT registered by an Observer?"
+}

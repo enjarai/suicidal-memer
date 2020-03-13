@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Phantoms",
+        ":regional_indicator_b:": "Silverfish",
+        ":regional_indicator_c:": "Shulker",
+        ":regional_indicator_d:": "Endermite"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Whats the only mob Endermen always get angry at?"
+}

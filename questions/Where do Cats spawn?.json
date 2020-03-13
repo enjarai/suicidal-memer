@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Plains",
+        ":regional_indicator_b:": "Village",
+        ":regional_indicator_c:": "Savanna",
+        ":regional_indicator_d:": "Jungle"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "Where do Cats spawn?"
+}

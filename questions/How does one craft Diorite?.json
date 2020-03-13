@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "You can't",
+        ":regional_indicator_b:": "Granite & Cobblestone",
+        ":regional_indicator_c:": "Granite & Quartz",
+        ":regional_indicator_d:": "Cobblestone & Quartz"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "How does one craft Diorite?"
+}
