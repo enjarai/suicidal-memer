@@ -1,210 +1,572 @@
 {
-    "Which color is closest to the top of a Grass Block?\na: #51C6CA\nb: #614F42\nc: #494949\nd: #44673B": [
-        "d",
-        "#44673b"
-    ],
-    "Where do Cats spawn?\na: Plains\nb: Village\nc: Savanna\nd: Jungle": [
-        "b",
-        "village"
-    ],
-    "Where do Ocelots spawn?\na: Village\nb: Plains\nc: Jungle\nd: Savanna": [
-        "c",
-        "jungle"
-    ],
-    "Whats a way to obtain Music Disks?\na: Let a Skeleton kill a Creeper\nb: Let a Creeper kill a Skeleton\nc: A Stronghold chest\nd: A Creeper has a 0.01% Chance to drop one": [
-        "a",
-        "let a skeleton kill a creeper"
-    ],
-    "Whats the only mob Endermen always get angry at?\na: Phantoms\nb: Silverfish\nc: Shulker\nd: Endermite": [
-        "d",
-        "endermite"
-    ],
-    "Which of these mobs has never existed in the game?\na: Red Dragon\nb: Beast Boy\nc: Rana\nd: Human": [
-        "a",
-        "red dragon"
-    ],
-    "Which of these is not an Advancement in the game?\na: The End\nb: Uneasy Alliance\nc: Beaconator\nd: The Beginning": [
-        "d",
-        "the beginning"
-    ],
-    "Which of these plants can't be bonemealed?\na: Fern\nb: Sweet Berry Bush\nc: Chorus Plant\nd: Sea Pickle": [
-        "c",
-        "chorus plant"
-    ],
-    "IHow can you get the Tall Grass item in survival?\na: Breaking Tall Grass with shears\nb: You can't\nc: Bonemealing normal grass\nd: They can be found in Village Chests": [
-        "d",
-        "they can be found in village chests"
-    ],
-    "Are ores renewable?\na: No\nb: Yes": [
-        "a",
-        "no"
-    ],
-    "Which of these blocks is obtainable in Survival as an item?\na: Grass Path\nb: Farmland\nc: Frosted Ice\nd: Coral Fans": [
-        "d",
-        "coral fans"
-    ],
-    "How can you speed up Zombie Villager curing?\na: You can't\nb: Feeding it more Golden Apples\nc: Having other Villagers around it\nd: Placing Beds around it": [
-        "d",
-        "placing beds around it"
-    ],
-    "Whats the maximum amount of Saturation a player can have?\na: 40\nb: 5\nc: 10\nd: 20": [
-        "d",
-        "20"
-    ],
-    "How much Saturation do Enchanted Golden Apples restore?\na: 8.6\nb: 5.2\nc: 10\nd: 9.6": [
-        "d",
-        "9.6"
-    ],
-    "Which of these mobs does not have the Size NBT tag?\na: Phantom\nb: Slime Cube\nc: Wither\nd: Magma Cube": [
-        "c",
-        "wither"
-    ],
-    "The Turtle Helmet gives the same amount of armor points as..?\na: Iron\nb: Gold\nc: Leather\nd: Diamond": [
-        "a",
-        "iron"
-    ],
-    "How many armor points does the combination \"Diamond Boots, Chainmail Chestplate, Turtle Shell\" provide?\na: 12\nb: 10\nc: 15\nd: 8": [
-        "b",
-        "10"
-    ],
-    "Which of these items is in the Treasure category for fishing?\na: Bowl\nb: Lily Pad\nc: Ink Sac\nd: Fishing Rod": [
-        "b",
-        "lily pad"
-    ],
-    "How many Durability Points does a Fishing Rod have?\na: 53\nb: 64\nc: 65\nd: 50": [
-        "c",
-        "65"
-    ],
-    "How many Durability Points does a Golden Sword have?\na: 33\nb: 53\nc: 32\nd: 54": [
-        "c",
-        "32"
-    ],
-    "How many Durability Points Does a Chainmail Chestplate have?\na: 341\nb: 241\nc: 441\nd: 141": [
-        "b",
-        "241"
-    ],
-    "How much damage does a Diamond Sword with Sharpness III do?\na: 7\nb: 9\nc: 8\nd: 10": [
-        "b",
-        "9"
-    ],
-    "If you somehow created a Iron Shovel with Sharpness IV, how much damage would it do?\na: 10\nb: 9\nc: 7\nd: 8": [
-        "c",
-        "7"
-    ],
-    "If you somehow enchanted a Stick with Sharpness XVII, how much damage would it do?\na: OVER NINE THOUSAND!\nb: 10\nc: 20\nd: 15": [
-        "b",
-        "10"
-    ],
-    "Damage reduction by the Protection enchantment is capped at what percentage?\na: 100\nb: 80\nc: 50\nd: 60": [
-        "b",
-        "80"
-    ],
-    "By how much percent would incoming damage be reduced while wearing Protection III?\na: 8\nb: 10\nc: 18\nd: 12": [
-        "d",
-        "12"
-    ],
-    "By how much is fall damage reduced while wearing boots with Feather Falling IV?\na: 16\nb: 10\nc: 4\nd: 8": [
-        "d",
-        "8"
-    ],
-    "How many hits does it take to kill a Wither with a Smite V Diamond Sword?\na: 24\nb: 20\nc: 25\nd: 15": [
-        "d",
-        "15"
-    ],
-    "In which update were downwards-facing Dispensers added?\na: 1.0\nb: 1.5\nc: 1.2\nd: 1.7": [
-        "b",
-        "1.5"
-    ],
-    "Which update is also known as \"the Flattening\"?\na: 1.12\nb: 1.13\nc: 1.0\nd: 1.14": [
-        "b",
-        "1.13"
-    ],
-    "How far are the Outer End Islands from the center island?\na: 1000 blocks\nb: 10000 blocks\nc: 100 blocks\nd: 500 blocks": [
-        "a",
-        "1000 blocks"
-    ],
-    "Whats the max level of Bad Omen one can have?\na: 6\nb: 7\nc: 3\nd: 5": [
-        "a",
-        "6"
-    ],
-    "How many Gold Nuggets does it take to make a golden apple?\na: 648\nb: 576\nc: 72\nd: 64": [
-        "c",
-        "72"
-    ],
-    "How many Cat skins are there?\na: 11\nb: 3\nc: 10\nd: 4": [
-        "a",
-        "11"
-    ],
-    "What item do Cats drop?\na: Wheat\nb: Nothing\nc: Feather\nd: String": [
-        "d",
-        "string"
-    ],
-    "Whats the maximum natural height of a Kelp plant?\na: 20\nb: 26\nc: 25\nd: 21": [
-        "b",
-        "26"
-    ],
-    "How many items does a single Kelp Block smelt?\na: 24\nb: 16\nc: 20\nd: 10": [
-        "c",
-        "20"
-    ],
-    "In which update was the Anvil added?\na: 1.6\nb: 1.8\nc: 1.4\nd: 1.2": [
-        "c",
-        "1.4"
-    ],
-    "In which update was the Absorption effect added?\na: 1.2\nb: 1.6\nc: 1.0\nd: 1.4": [
-        "b",
-        "1.6"
-    ],
-    "How does one craft Granite?\na: Cobblestone & Quartz\nb: You can't\nc: Andesite & Diorite\nd: Diorite & Quartz": [
-        "d",
-        "diorite & quartz"
-    ],
-    "How does one craft Diorite?\na: You can't\nb: Granite & Cobblestone\nc: Granite & Quartz\nd: Cobblestone & Quartz": [
-        "d",
-        "cobblestone & quartz"
-    ],
-    "How does one make Andesite?\na: Granite & Cobblestone\nb: Quartz & Diorite\nc: Diorite & Cobblestone\nd: Quartz & Granite": [
-        "c",
-        "diorite & cobblestone"
-    ],
-    "Whats the size of the spawn area for a Mob Spawner?\na: 9x9x4\nb: 7x7x4\nc: 9x9x3\nd: 7x7x3": [
-        "c",
-        "9x9x3"
-    ],
-    "Whats the vertical teleport radius of a Dragon Egg?\na: 4\nb: 10\nc: 3\nd: 7": [
-        "d",
-        "7"
-    ],
-    "How many Game Ticks is the delay of an Observer?\na: 2\nb: 4\nc: 6\nd: 1": [
-        "a",
-        "2"
-    ],
-    "Which of these events is NOT registered by an Observer?\na: Adding/removing items from a Brewing Stand\nb: Activating a Beacon\nc: Changes to block states of Fire\nd: Playing a Note Block": [
-        "b",
-        "activating a beacon"
-    ],
-    "In which update were Command Blocks added?\na: 1.7\nb: 1.4\nc: 1.8\nd: 1.6": [
-        "b",
-        "1.4"
-    ],
-    "How many types of Rabbit exist in total (including easter eggs)?\na: 8\nb: 10\nc: 4\nd: 6": [
-        "a",
-        "8"
-    ],
-    "What is the area in which Witches spawn around Witch huts?\na: 9x7x9\nb: 9x9x9\nc: 7x7x7\nd: 7x9x7": [
-        "d",
-        "7x9x7"
-    ],
-    "Which of these snapshots is from the 1.8 update?\na: 15w31b\nb: 14w31a\nc: 16w06a\nd: 13w49a": [
-        "b",
-        "14w31a"
-    ],
-    "Which of these snapshots is from the 1.4 update?\na: 12w07b\nb: 12w37a\nc: 12w21b\nd: 12w01a": [
-        "b",
-        "12w37a"
-    ],
-    "Which of these Pre-Releases is from the 1.6 update? ;)\na: 1.4.7-pre\nb: 1.3.2-pre\nc: 1.6.3-pre\nd: 1.6-pre": [
-        "d",
-        "1.6-pre"
-    ]
+    "Which color is closest to the top of a Grass Block?": {
+        "options": {
+            ":regional_indicator_a:": "#51C6CA",
+            ":regional_indicator_b:": "#614F42",
+            ":regional_indicator_c:": "#494949",
+            ":regional_indicator_d:": "#44673B"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Where do Cats spawn?": {
+        "options": {
+            ":regional_indicator_a:": "Plains",
+            ":regional_indicator_b:": "Village",
+            ":regional_indicator_c:": "Savanna",
+            ":regional_indicator_d:": "Jungle"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "Where do Ocelots spawn?": {
+        "options": {
+            ":regional_indicator_a:": "Village",
+            ":regional_indicator_b:": "Plains",
+            ":regional_indicator_c:": "Jungle",
+            ":regional_indicator_d:": "Savanna"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "Whats a way to obtain Music Disks?": {
+        "options": {
+            ":regional_indicator_a:": "Let a Skeleton kill a Creeper",
+            ":regional_indicator_b:": "Let a Creeper kill a Skeleton",
+            ":regional_indicator_c:": "A Stronghold chest",
+            ":regional_indicator_d:": "A Creeper has a 0.01% Chance to drop one"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "Whats the only mob Endermen always get angry at?": {
+        "options": {
+            ":regional_indicator_a:": "Phantoms",
+            ":regional_indicator_b:": "Silverfish",
+            ":regional_indicator_c:": "Shulker",
+            ":regional_indicator_d:": "Endermite"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Which of these mobs has never existed in the game?": {
+        "options": {
+            ":regional_indicator_a:": "Red Dragon",
+            ":regional_indicator_b:": "Beast Boy",
+            ":regional_indicator_c:": "Rana",
+            ":regional_indicator_d:": "Human"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "Which of these is not an Advancement in the game?": {
+        "options": {
+            ":regional_indicator_a:": "The End",
+            ":regional_indicator_b:": "Uneasy Alliance",
+            ":regional_indicator_c:": "Beaconator",
+            ":regional_indicator_d:": "The Beginning"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Which of these plants can't be bonemealed?": {
+        "options": {
+            ":regional_indicator_a:": "Fern",
+            ":regional_indicator_b:": "Sweet Berry Bush",
+            ":regional_indicator_c:": "Chorus Plant",
+            ":regional_indicator_d:": "Sea Pickle"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "IHow can you get the Tall Grass item in survival?": {
+        "options": {
+            ":regional_indicator_a:": "Breaking Tall Grass with shears",
+            ":regional_indicator_b:": "You can't",
+            ":regional_indicator_c:": "Bonemealing normal grass",
+            ":regional_indicator_d:": "They can be found in Village Chests"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Are ores renewable?": {
+        "options": {
+            ":regional_indicator_a:": "No",
+            ":regional_indicator_b:": "Yes"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "Which of these blocks is obtainable in Survival as an item?": {
+        "options": {
+            ":regional_indicator_a:": "Grass Path",
+            ":regional_indicator_b:": "Farmland",
+            ":regional_indicator_c:": "Frosted Ice",
+            ":regional_indicator_d:": "Coral Fans"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "How can you speed up Zombie Villager curing?": {
+        "options": {
+            ":regional_indicator_a:": "You can't",
+            ":regional_indicator_b:": "Feeding it more Golden Apples",
+            ":regional_indicator_c:": "Having other Villagers around it",
+            ":regional_indicator_d:": "Placing Beds around it"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Whats the maximum amount of Saturation a player can have?": {
+        "options": {
+            ":regional_indicator_a:": "40",
+            ":regional_indicator_b:": "5",
+            ":regional_indicator_c:": "10",
+            ":regional_indicator_d:": "20"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "How much Saturation do Enchanted Golden Apples restore?": {
+        "options": {
+            ":regional_indicator_a:": "8.6",
+            ":regional_indicator_b:": "5.2",
+            ":regional_indicator_c:": "10",
+            ":regional_indicator_d:": "9.6"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Which of these mobs does not have the Size NBT tag?": {
+        "options": {
+            ":regional_indicator_a:": "Phantom",
+            ":regional_indicator_b:": "Slime Cube",
+            ":regional_indicator_c:": "Wither",
+            ":regional_indicator_d:": "Magma Cube"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "The Turtle Helmet gives the same amount of armor points as..?": {
+        "options": {
+            ":regional_indicator_a:": "Iron",
+            ":regional_indicator_b:": "Gold",
+            ":regional_indicator_c:": "Leather",
+            ":regional_indicator_d:": "Diamond"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "How many armor points does the combination \"Diamond Boots, Chainmail Chestplate, Turtle Shell\" provide?": {
+        "options": {
+            ":regional_indicator_a:": "12",
+            ":regional_indicator_b:": "10",
+            ":regional_indicator_c:": "15",
+            ":regional_indicator_d:": "8"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "Which of these items is in the Treasure category for fishing?": {
+        "options": {
+            ":regional_indicator_a:": "Bowl",
+            ":regional_indicator_b:": "Lily Pad",
+            ":regional_indicator_c:": "Ink Sac",
+            ":regional_indicator_d:": "Fishing Rod"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "How many Durability Points does a Fishing Rod have?": {
+        "options": {
+            ":regional_indicator_a:": "53",
+            ":regional_indicator_b:": "64",
+            ":regional_indicator_c:": "65",
+            ":regional_indicator_d:": "50"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "How many Durability Points does a Golden Sword have?": {
+        "options": {
+            ":regional_indicator_a:": "33",
+            ":regional_indicator_b:": "53",
+            ":regional_indicator_c:": "32",
+            ":regional_indicator_d:": "54"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "How many Durability Points Does a Chainmail Chestplate have?": {
+        "options": {
+            ":regional_indicator_a:": "341",
+            ":regional_indicator_b:": "241",
+            ":regional_indicator_c:": "441",
+            ":regional_indicator_d:": "141"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "How much damage does a Diamond Sword with Sharpness III do?": {
+        "options": {
+            ":regional_indicator_a:": "7",
+            ":regional_indicator_b:": "9",
+            ":regional_indicator_c:": "8",
+            ":regional_indicator_d:": "10"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "If you somehow created a Iron Shovel with Sharpness IV, how much damage would it do?": {
+        "options": {
+            ":regional_indicator_a:": "10",
+            ":regional_indicator_b:": "9",
+            ":regional_indicator_c:": "7",
+            ":regional_indicator_d:": "8"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "If you somehow enchanted a Stick with Sharpness XVII, how much damage would it do?": {
+        "options": {
+            ":regional_indicator_a:": "OVER NINE THOUSAND!",
+            ":regional_indicator_b:": "10",
+            ":regional_indicator_c:": "20",
+            ":regional_indicator_d:": "15"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "Damage reduction by the Protection enchantment is capped at what percentage?": {
+        "options": {
+            ":regional_indicator_a:": "100",
+            ":regional_indicator_b:": "80",
+            ":regional_indicator_c:": "50",
+            ":regional_indicator_d:": "60"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "By how much percent would incoming damage be reduced while wearing Protection III?": {
+        "options": {
+            ":regional_indicator_a:": "8",
+            ":regional_indicator_b:": "10",
+            ":regional_indicator_c:": "18",
+            ":regional_indicator_d:": "12"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "By how much is fall damage reduced while wearing boots with Feather Falling IV?": {
+        "options": {
+            ":regional_indicator_a:": "16",
+            ":regional_indicator_b:": "10",
+            ":regional_indicator_c:": "4",
+            ":regional_indicator_d:": "8"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "How many hits does it take to kill a Wither with a Smite V Diamond Sword?": {
+        "options": {
+            ":regional_indicator_a:": "24",
+            ":regional_indicator_b:": "20",
+            ":regional_indicator_c:": "25",
+            ":regional_indicator_d:": "15"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "In which update were downwards-facing Dispensers added?": {
+        "options": {
+            ":regional_indicator_a:": "1.0",
+            ":regional_indicator_b:": "1.5",
+            ":regional_indicator_c:": "1.2",
+            ":regional_indicator_d:": "1.7"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "Which update is also known as \"the Flattening\"?": {
+        "options": {
+            ":regional_indicator_a:": "1.12",
+            ":regional_indicator_b:": "1.13",
+            ":regional_indicator_c:": "1.0",
+            ":regional_indicator_d:": "1.14"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "How far are the Outer End Islands from the center island?": {
+        "options": {
+            ":regional_indicator_a:": "1000 blocks",
+            ":regional_indicator_b:": "10000 blocks",
+            ":regional_indicator_c:": "100 blocks",
+            ":regional_indicator_d:": "500 blocks"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "Whats the max level of Bad Omen one can have?": {
+        "options": {
+            ":regional_indicator_a:": "6",
+            ":regional_indicator_b:": "7",
+            ":regional_indicator_c:": "3",
+            ":regional_indicator_d:": "5"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "How many Gold Nuggets does it take to make a golden apple?": {
+        "options": {
+            ":regional_indicator_a:": "648",
+            ":regional_indicator_b:": "576",
+            ":regional_indicator_c:": "72",
+            ":regional_indicator_d:": "64"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "How many Cat skins are there?": {
+        "options": {
+            ":regional_indicator_a:": "11",
+            ":regional_indicator_b:": "3",
+            ":regional_indicator_c:": "10",
+            ":regional_indicator_d:": "4"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "What item do Cats drop?": {
+        "options": {
+            ":regional_indicator_a:": "Wheat",
+            ":regional_indicator_b:": "Nothing",
+            ":regional_indicator_c:": "Feather",
+            ":regional_indicator_d:": "String"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Whats the maximum natural height of a Kelp plant?": {
+        "options": {
+            ":regional_indicator_a:": "20",
+            ":regional_indicator_b:": "26",
+            ":regional_indicator_c:": "25",
+            ":regional_indicator_d:": "21"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "How many items does a single Kelp Block smelt?": {
+        "options": {
+            ":regional_indicator_a:": "24",
+            ":regional_indicator_b:": "16",
+            ":regional_indicator_c:": "20",
+            ":regional_indicator_d:": "10"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "In which update was the Anvil added?": {
+        "options": {
+            ":regional_indicator_a:": "1.6",
+            ":regional_indicator_b:": "1.8",
+            ":regional_indicator_c:": "1.4",
+            ":regional_indicator_d:": "1.2"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "In which update was the Absorption effect added?": {
+        "options": {
+            ":regional_indicator_a:": "1.2",
+            ":regional_indicator_b:": "1.6",
+            ":regional_indicator_c:": "1.0",
+            ":regional_indicator_d:": "1.4"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "How does one craft Granite?": {
+        "options": {
+            ":regional_indicator_a:": "Cobblestone & Quartz",
+            ":regional_indicator_b:": "You can't",
+            ":regional_indicator_c:": "Andesite & Diorite",
+            ":regional_indicator_d:": "Diorite & Quartz"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "How does one craft Diorite?": {
+        "options": {
+            ":regional_indicator_a:": "You can't",
+            ":regional_indicator_b:": "Granite & Cobblestone",
+            ":regional_indicator_c:": "Granite & Quartz",
+            ":regional_indicator_d:": "Cobblestone & Quartz"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "How does one make Andesite?": {
+        "options": {
+            ":regional_indicator_a:": "Granite & Cobblestone",
+            ":regional_indicator_b:": "Quartz & Diorite",
+            ":regional_indicator_c:": "Diorite & Cobblestone",
+            ":regional_indicator_d:": "Quartz & Granite"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "Whats the size of the spawn area for a Mob Spawner?": {
+        "options": {
+            ":regional_indicator_a:": "9x9x4",
+            ":regional_indicator_b:": "7x7x4",
+            ":regional_indicator_c:": "9x9x3",
+            ":regional_indicator_d:": "7x7x3"
+        },
+        "correct": [
+            ":regional_indicator_c:"
+        ]
+    },
+    "Whats the vertical teleport radius of a Dragon Egg?": {
+        "options": {
+            ":regional_indicator_a:": "4",
+            ":regional_indicator_b:": "10",
+            ":regional_indicator_c:": "3",
+            ":regional_indicator_d:": "7"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "How many Game Ticks is the delay of an Observer?": {
+        "options": {
+            ":regional_indicator_a:": "2",
+            ":regional_indicator_b:": "4",
+            ":regional_indicator_c:": "6",
+            ":regional_indicator_d:": "1"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "Which of these events is NOT registered by an Observer?": {
+        "options": {
+            ":regional_indicator_a:": "Adding/removing items from a Brewing Stand",
+            ":regional_indicator_b:": "Activating a Beacon",
+            ":regional_indicator_c:": "Changes to block states of Fire",
+            ":regional_indicator_d:": "Playing a Note Block"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "In which update were Command Blocks added?": {
+        "options": {
+            ":regional_indicator_a:": "1.7",
+            ":regional_indicator_b:": "1.4",
+            ":regional_indicator_c:": "1.8",
+            ":regional_indicator_d:": "1.6"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "How many types of Rabbit exist in total (including easter eggs)?": {
+        "options": {
+            ":regional_indicator_a:": "8",
+            ":regional_indicator_b:": "10",
+            ":regional_indicator_c:": "4",
+            ":regional_indicator_d:": "6"
+        },
+        "correct": [
+            ":regional_indicator_a:"
+        ]
+    },
+    "What is the area in which Witches spawn around Witch huts?": {
+        "options": {
+            ":regional_indicator_a:": "9x7x9",
+            ":regional_indicator_b:": "9x9x9",
+            ":regional_indicator_c:": "7x7x7",
+            ":regional_indicator_d:": "7x9x7"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    },
+    "Which of these snapshots is from the 1.8 update?": {
+        "options": {
+            ":regional_indicator_a:": "15w31b",
+            ":regional_indicator_b:": "14w31a",
+            ":regional_indicator_c:": "16w06a",
+            ":regional_indicator_d:": "13w49a"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "Which of these snapshots is from the 1.4 update?": {
+        "options": {
+            ":regional_indicator_a:": "12w07b",
+            ":regional_indicator_b:": "12w37a",
+            ":regional_indicator_c:": "12w21b",
+            ":regional_indicator_d:": "12w01a"
+        },
+        "correct": [
+            ":regional_indicator_b:"
+        ]
+    },
+    "Which of these Pre-Releases is from the 1.6 update? ;)": {
+        "options": {
+            ":regional_indicator_a:": "1.4.7-pre",
+            ":regional_indicator_b:": "1.3.2-pre",
+            ":regional_indicator_c:": "1.6.3-pre",
+            ":regional_indicator_d:": "1.6-pre"
+        },
+        "correct": [
+            ":regional_indicator_d:"
+        ]
+    }
 }
