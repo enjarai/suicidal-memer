@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "14",
+        ":regional_indicator_b:": "10",
+        ":regional_indicator_c:": "16",
+        ":regional_indicator_d:": "12"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "To make a Nether Portal you need at least how much Obsidian?"
+}

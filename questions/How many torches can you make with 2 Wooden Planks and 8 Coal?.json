@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "16",
+        ":regional_indicator_b:": "8",
+        ":regional_indicator_c:": "32",
+        ":regional_indicator_d:": "4"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "How many torches can you make with 2 Wooden Planks and 8 Coal?"
+}

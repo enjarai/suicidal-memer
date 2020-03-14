@@ -1,0 +1,10 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Stone Sword",
+        ":regional_indicator_b:": "Golden Sword"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Which sword does the most damage?"
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "When flowing water hits a lava source block",
+        ":regional_indicator_b:": "When flowing lava hits a water source block",
+        ":regional_indicator_c:": "When lava and water hit each other",
+        ":regional_indicator_d:": "When it rains on lava"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "How is obsidian created?"
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Raw Chicken",
+        ":regional_indicator_b:": "Raw Fish",
+        ":regional_indicator_c:": "Raw Salmon",
+        ":regional_indicator_d:": "Raw Beef"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Which of these can give you food poisoning (Hunger effect)?"
+}

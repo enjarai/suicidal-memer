@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Cow",
+        ":regional_indicator_b:": "Sheep",
+        ":regional_indicator_c:": "Pig",
+        ":regional_indicator_d:": "Mooshroom"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "Wheat can NOT be used to breed which animal?"
+}

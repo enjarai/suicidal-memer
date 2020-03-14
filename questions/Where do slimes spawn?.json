@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Swamps",
+        ":regional_indicator_b:": "Caves",
+        ":regional_indicator_c:": "Both swamps and caves",
+        ":regional_indicator_d:": "Neither"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "Where do slimes spawn?"
+}
