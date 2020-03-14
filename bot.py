@@ -19,6 +19,10 @@ config.read_file(open("config.conf", "r"))
 token = config.get("config", "token")
 channelid = config.get("config", "triviachannel")
 
+#read "database"
+with open("scores.json", "r") as f:
+    scores = json.load(f)
+
 qdir = glob.glob("./questions/*.json")
 questions = []
 for i in qdir:
@@ -116,27 +120,29 @@ print("connecting...")
 def check(reaction, user):
     return reaction.message.channel == client.get_channel(int(channelid)) and not user.id == client.user.id
 
+async def save():
+    with open("scores.json", "w") as f:
+        json.dump(scores, f, indent=4)
+
+async def modscore(user, amount):
+    scores[str(user.id)]["score"] += amount
+
 async def equal_dicts(a, b, ignore_keys):
     ka = set(a).difference(ignore_keys)
     kb = set(b).difference(ignore_keys)
     return ka == kb and all(a[k] == b[k] for k in ka)
 
-async def giveitem(scores, user, item, channel, sendmess, amount):
+async def giveitem(user, item, amount):
     userid = str(user.id)
     add = False
     for ownitem in scores[userid]["items"]:
-        #if await equal_dicts(ownitem, item, ignore_keys=("count")):
         if item["id"] == ownitem["id"]:
-            #scores[userid]["items"][index]["count"] += 1
             ownitem["count"] += amount
             add = True
             break
     if not add:
         item["count"] = amount
         scores[userid]["items"].append(item)
-    if sendmess:
-        await channel.send(f"""{user.mention}: + 1x {item["emoji"]} {item["displayname"]}""")
-    return scores
 
 async def hasitem(scores, userid, itemid):
     found = False
@@ -169,8 +175,6 @@ async def background():
                 points = (10 - (2 * tries)) * triviamultiplier
                 embed=discord.Embed(description="🟢 {} has earned {} points!".format(ua[1], points))
                 await channel.send(embed=embed)
-                with open("scores.json", "r") as f:
-                    scores = json.load(f)
                 if str(ua[1].id) in scores:
                     if "score" in scores[str(ua[1].id)]:
                         scores[str(ua[1].id)]["score"] += points
@@ -180,9 +184,8 @@ async def background():
                     scores[str(ua[1].id)] = {}
                     scores[str(ua[1].id)]["score"] = points
                 if random.randint(1, 10) == 1:
-                    scores = await giveitem(scores, ua[1], lootboxtemplate, ua[0].message.channel, True, 1)
-                with open("scores.json", "w") as f:
-                    json.dump(scores, f, indent=4)
+                    await giveitem(ua[1], lootboxtemplate, 1)
+                    await channel.send(f"{ua[1].mention}: Wow, you found a loot box!")
                 break
             else:
                 if tries < 4:
@@ -196,8 +199,6 @@ async def background2():
     while True:
         await asyncio.sleep(60)
         print("effect tick...")
-        with open("scores.json", "r") as f:
-            scores = json.load(f)
         for user in scores:
             if not "effects" in scores[user]:
                 scores[user]["effects"] = {}
@@ -211,8 +212,19 @@ async def background2():
                 if delete:
                     for thing in delete:
                         del scores[user]["effects"][thing]
-        with open("scores.json", "w") as f:
-            json.dump(scores, f, indent=4)
+
+async def background3():
+    await client.wait_until_ready()
+    print("background3 active")
+    while True:
+        await asyncio.sleep(60)
+        print("saving data...")
+        await save()
+
+@client.event
+async def on_disconnect():
+    print("saving data for disconnect...")
+    await save()
 
 @client.event
 async def on_message(message):
@@ -222,8 +234,6 @@ async def on_message(message):
             lastid[str(message.channel.id)] = 0
         if not message.author.id == lastid[str(message.channel.id)]:
             lastid[str(message.channel.id)] = message.author.id
-            with open("scores.json", "r") as f:
-                scores = json.load(f)
             if not str(message.author.id) in scores:
                 scores[str(message.author.id)] = {}
             if not "xp" in scores[str(message.author.id)]:
@@ -241,26 +251,18 @@ async def on_message(message):
                 scores[str(message.author.id)]["effects"] = {}
             if not "score" in scores[str(message.author.id)]:
                 scores[str(message.author.id)]["score"] = 0
-            #elif scores[str(message.author.id)]["score"] < -50:
-            #    scores[str(message.author.id)]["score"] = 2147483647
-            #levelup system
             scores[str(message.author.id)]["xp"] += 1
             if scores[str(message.author.id)]["xp"] >= levelcost:
                 scores[str(message.author.id)]["xp"] = 0
                 scores[str(message.author.id)]["level"] += 1
                 await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{scores[str(message.author.id)]["level"]}`""")
                 await message.channel.send(f"{message.author.mention}: Wow, you found a loot box!")
-                scores = await giveitem(scores, message.author, lootboxtemplate, message.channel, True, 1)
-
-            with open("scores.json", "w") as f:
-                json.dump(scores, f, indent=4)
+                await giveitem(message.author, lootboxtemplate, 1)
     await client.process_commands(message)
 
 @client.command(aliases=["bal", "money"])
 async def points(ctx, *args):
     """𝅘𝅥𝅮  it's all about the money, money, money 𝅘𝅥𝅮 """
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     if len(args) == 1:
         if ctx.message.mentions:
             member = ctx.message.mentions[0]
@@ -276,8 +278,6 @@ async def points(ctx, *args):
 @client.command()
 async def mclink(ctx, mcacc: str):
     """For the Minceraft server, enter your username and buy ingame items with your points (not microtransactions)"""
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     if not str(ctx.author.id) in scores:
         scores[str(ctx.author.id)] = {}
     id = 0
@@ -290,14 +290,10 @@ async def mclink(ctx, mcacc: str):
     else:
         scores[str(ctx.author.id)]["mcacc"] = mcacc
         await ctx.send("Database updated!")
-    with open("scores.json", "w") as f:
-        json.dump(scores, f, indent=4)
 
 @client.command(aliases=["bet", "casino"])
 async def gamble(ctx, amount: int):
     """Come on, have a try. You have a 50% chance to double your bet"""
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     if amount < 1:
         await ctx.send("nice try")
         return
@@ -317,8 +313,6 @@ async def gamble(ctx, amount: int):
         else:
             scores[str(ctx.author.id)]["score"] -= amount
             await ctx.send("You lost! This is so sad...\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
-        with open("scores.json", "w") as f:
-            json.dump(scores, f, indent=4)
     else:
         await ctx.send("You can't gamble what you don't have")
 
@@ -329,8 +323,6 @@ async def gamble_error(ctx, error):
 @client.command(aliases=["inv", "items"])
 async def inventory(ctx, *args):
     """SHOW ME WHAT YOU GOT"""
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     if len(args) == 1:
         if ctx.message.mentions:
             member = ctx.message.mentions[0]
@@ -350,19 +342,21 @@ async def inventory(ctx, *args):
             embed.add_field(name=item["emoji"], value=f"""{item["count"]}x {item["displayname"]}""", inline=True)
     await ctx.send(embed=embed)    
 
-#@client.command()
-#async def gimme(ctx, giv: int):
-#    with open("scores.json", "r") as f:
-#        scores = json.load(f)
-#    if giv == 1:
-#        giv = lootboxtemplate
-#    elif giv == 1432:
-#        giv = loadeddice
-#    elif giv == 1433:
-#        giv = spambot
-#    scores = await giveitem(scores, ctx.author, giv, ctx.channel, True, 1)
-#    with open("scores.json", "w") as f:
-#        json.dump(scores, f, indent=4)
+@client.command()
+@commands.is_owner()
+async def gimme(ctx, giv: int, user=None):
+    if user:
+        if ctx.message.mentions:
+            member = ctx.message.mentions[0]
+        else:
+            member = ctx.guild.get_member_named(user)
+        if not member:
+            await ctx.send("I don't know them")
+            return
+    else:
+        member = ctx.author
+    await giveitem(member, itemindex[str(giv)], 1)
+    await ctx.send(f"""{member.mention}: i got u one of them {itemindex[str(giv)]["displayname"]}, you filthy cheater""")
 
 @client.command(aliases=["info", "tellmemore"])
 async def iteminfo(ctx, *, item: str):
@@ -384,8 +378,6 @@ async def iteminfo_error(ctx, error):
 async def use(ctx, *args):
     """Do something with your random crap"""
     if args:
-        with open("scores.json", "r") as f:
-            scores = json.load(f)
         if len(args) == 1:
             if args[0] in itemaliases["1"]:
                 has = await hasitem(scores, ctx.author.id, 1)
@@ -402,7 +394,7 @@ async def use(ctx, *args):
                             scores[str(ctx.author.id)]["score"] += amount
                         else:
                             embed.add_field(name=itemindex[addthis]["emoji"], value=f"""{amount}x {itemindex[addthis]["displayname"]}""", inline=True)
-                            scores = await giveitem(scores, ctx.author, itemindex[addthis], ctx.channel, False, amount)
+                            await giveitem(ctx.author, itemindex[addthis], amount)
                     await ctx.send(embed=embed)
                     #----------------------
                     if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
@@ -532,8 +524,6 @@ async def use(ctx, *args):
                 await ctx.send("That item does not exist...")
         else:
             await ctx.send("Too many arguments.")
-        with open("scores.json", "w") as f:
-            json.dump(scores, f, indent=4)
     else:
         await ctx.send("Please specify an item.")
 
@@ -544,8 +534,6 @@ async def use_error(ctx, error):
 @client.command(aliases=["xp"])
 async def level(ctx, *args):
     """You probably won't get any higher than 2 or 3 tbh"""
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     if len(args) == 1:
         if ctx.message.mentions:
             member = ctx.message.mentions[0]
@@ -561,8 +549,6 @@ async def level(ctx, *args):
 @client.command(aliases=["richest", "leaderboard"])
 async def baltop(ctx):
     """See who to rob"""
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     top = []
     for userid in scores:
         top.append((userid, scores[userid]["score"]))
@@ -595,14 +581,10 @@ async def shop(ctx, buythis=None):
                 buythisid = int(item)
                 break
         if buythisid:
-            with open("scores.json", "r") as f:
-                scores = json.load(f)
             if scores[str(ctx.author.id)]["score"] >= shopcosts[str(buythisid)]:
                 await ctx.send(f"""{ctx.author.mention}: you bought 1 {itemindex[str(buythisid)]["emoji"]} {itemindex[str(buythisid)]["displayname"]}""")
                 scores[str(ctx.author.id)]["score"] -= shopcosts[str(buythisid)]
-                scores = await giveitem(scores, ctx.author, itemindex[str(buythisid)], ctx.channel, True, 1)
-                with open("scores.json", "w") as f:
-                    json.dump(scores, f, indent=4)
+                await giveitem(ctx.author, itemindex[str(buythisid)], 1)
             else:
                 await ctx.send("U ain't got da cash m8")
         else:
@@ -616,17 +598,13 @@ async def shop(ctx, buythis=None):
 
 @client.command()
 async def helpiminfuckingdebt(ctx):
-    with open("scores.json", "r") as f:
-        scores = json.load(f)
     if scores[str(ctx.author.id)]["score"] < 0:
         await ctx.send("ur in some deep shit my dude, lemme help u out")
         scores[str(ctx.author.id)]["score"] = 0
-        with open("scores.json", "w") as f:
-            json.dump(scores, f, indent=4)
     else:
         await ctx.send("no ur not")
 
 if channelid:
     client.loop.create_task(background())
-# client.loop.create_task(background2())
+client.loop.create_task(background3())
 client.run(token)
