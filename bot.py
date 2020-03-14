@@ -18,6 +18,8 @@ config = configparser.ConfigParser()
 config.read_file(open("config.conf", "r"))
 token = config.get("config", "token")
 channelid = config.get("config", "triviachannel")
+triviaminwait = int(config.get("config", "triviaminwait"))
+triviamaxwait = int(config.get("config", "triviamaxwait"))
 
 #read "database"
 with open("scores.json", "r") as f:
@@ -156,7 +158,7 @@ async def background():
     await client.wait_until_ready()
     channel = client.get_channel(int(channelid))
     while True:
-        slp = random.randint(360, 600)
+        slp = random.randint(triviaminwait, triviamaxwait)
         print("Waiting {} seconds".format(slp))
         await asyncio.sleep(slp)
         q = random.choice(questions)
@@ -171,6 +173,7 @@ async def background():
         tries = 0
         while True:
             ua = await client.wait_for("reaction_add", check=check)
+            await ua[0].remove(ua[1])
             if emoji.demojize(ua[0].emoji, use_aliases=True) in q["correct"]:
                 points = (10 - (2 * tries)) * triviamultiplier
                 embed=discord.Embed(description="🟢 {} has earned {} points!".format(ua[1], points))
