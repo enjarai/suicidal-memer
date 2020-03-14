@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Zombie",
+        ":regional_indicator_b:": "Skeleton",
+        ":regional_indicator_c:": "Spider",
+        ":regional_indicator_d:": "Creeper"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Which of these mobs doesn't have a spawner you can get in vanilla survival?"
+}

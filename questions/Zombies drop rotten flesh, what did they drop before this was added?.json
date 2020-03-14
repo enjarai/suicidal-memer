@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Steak",
+        ":regional_indicator_b:": "Feathers",
+        ":regional_indicator_c:": "Arrows",
+        ":regional_indicator_d:": "Bread"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "Zombies drop rotten flesh, what did they drop before this was added?"
+}

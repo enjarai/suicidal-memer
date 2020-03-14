@@ -1,0 +1,11 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Wheat",
+        ":regional_indicator_b:": "Rotten Flesh",
+        ":regional_indicator_c:": "Steak"
+    },
+    "correct": [
+        ":regional_indicator_a:"
+    ],
+    "text": "Which of these is not edible?"
+}

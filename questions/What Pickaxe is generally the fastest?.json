@@ -1,0 +1,11 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Diamond",
+        ":regional_indicator_b:": "Gold",
+        ":regional_indicator_c:": "Netherite"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "What Pickaxe is generally the fastest?"
+}

@@ -1,0 +1,10 @@
+{
+    "options": {
+        ":regional_indicator_a:": "The redstone torch will stay on",
+        ":regional_indicator_b:": "The redstone torch will turn off"
+    },
+    "correct": [
+        ":regional_indicator_b:"
+    ],
+    "text": "What will happen if you place a redstone torch on the side of a redstone block?"
+}
