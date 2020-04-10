@@ -69,6 +69,11 @@ nuke = {
     "emoji": "<:nuke:671718044078440448>",
     "id": 7,
 }
+nuke2 = {
+    "displayname": "Nuke 2: Electric Boogaloo",
+    "emoji": "<:nuke2:698057397574303784>",
+    "id": 8,
+}
 
 itemaliases = {
     "1": ["lootbox", "loot box", "loot"],
@@ -77,7 +82,8 @@ itemaliases = {
     "4": ["mask", "robber", "robbersmask", "robbers mask", "robbermask"],
     "5": ["bread", "moldy", "moldybread", "moldy bread"],
     "6": ["fortune", "cookie", "fortunecookie", "fortune cookie"],
-    "7": ["nuke", "big boom"]
+    "7": ["nuke", "big boom"],
+    "8": ["nuke2", "big boom 2", "bigboom2", "nuke2electricboogaloo"]
 }
 itemdescriptions = {
     "1": "Some say it's gambling, so imma add it while it's legal...",
@@ -86,7 +92,8 @@ itemdescriptions = {
     "4": "Use this to steal some points from your buddies, i'm sure they won't hate you...",
     "5": "Why would you keep this?",
     "6": "Shows you your true fortune!",
-    "7": "Kim jong un wants to know your location. this item steals up to 500 points from anyone, but half of them are always destroyed"
+    "7": "Kim jong un wants to know your location. DISCOUNT 90%!!!111!!1!!1",
+    "8": "The cooler daniel"
 }
 itemmax = {
     "0": 200,
@@ -95,7 +102,18 @@ itemmax = {
     "4": 1,
     "5": 1,
     "6": 10,
-    "7": 1
+    "7": 1,
+    "8": 1
+}
+itemchances = {
+    "0": 10,
+    "2": 10,
+    "3": 15,
+    "4": 7,
+    "5": 5,
+    "6": 10,
+    "7": 5,
+    "8": 3
 }
 itemindex = {
     "1": lootboxtemplate,
@@ -104,7 +122,8 @@ itemindex = {
     "4": robbersmask,
     "5": moldybread,
     "6": fortunecookie,
-    "7": nuke
+    "7": nuke,
+    "8": nuke2
 }
 shopcosts = {
     "1": 500,
@@ -113,7 +132,8 @@ shopcosts = {
     "4": 400,
     "5": 20,
     "6": 80,
-    "7": 1000
+    "7": 100,
+    "8": 1000
 }
 
 print("connecting...")
@@ -361,6 +381,22 @@ async def gimme(ctx, giv: int, user=None):
     await giveitem(member, itemindex[str(giv)], 1)
     await ctx.send(f"""{member.mention}: i got u one of them {itemindex[str(giv)]["displayname"]}, you filthy cheater""")
 
+@client.command()
+@commands.is_owner()
+async def gimmecash(ctx, giv: int, user=None):
+    if user:
+        if ctx.message.mentions:
+            member = ctx.message.mentions[0]
+        else:
+            member = ctx.guild.get_member_named(user)
+        if not member:
+            await ctx.send("I don't know them")
+            return
+    else:
+        member = ctx.author
+    scores[str(member.id)]["score"] += giv
+    await ctx.send(f"""{member.mention}: i got u some of them cash, you filthy cheater""")
+
 @client.command(aliases=["info", "tellmemore"])
 async def iteminfo(ctx, *, item: str):
     """U wanna know what some of this shit does?"""
@@ -390,7 +426,12 @@ async def use(ctx, *args):
                     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
                     for i in range(3):
                         print(i)
-                        addthis = random.choice(list(itemmax.keys()))
+                        addthislist = []
+                        for ii in list(itemmax.keys()):
+                            for iii in range(itemchances[ii]):
+                                print(iii)
+                                addthislist.append(ii)
+                        addthis = random.choice(addthislist)
                         amount = random.randint(1, itemmax[addthis])
                         if addthis == "0":
                             embed.add_field(name="<:coin:632592319245451286>", value=f"""{amount} Points""", inline=True)
@@ -415,7 +456,6 @@ async def use(ctx, *args):
                     else:
                         del scores[str(ctx.author.id)]["items"][has]
                     await ctx.send(ctx.author.mention + ": used item")
-                    # await ctx.send("sorry, this item has been deemed to OP and is temp banned")
                 else:
                     await ctx.send("You don't have that item...")
             elif args[0] in itemaliases["3"]:
@@ -512,6 +552,31 @@ async def use(ctx, *args):
                             amount = random.randint(0, scores[str(member.id)]["score"] * -1) * -1
                         elif scores[str(member.id)]["score"] < 500:
                             amount = random.randint(0, scores[str(member.id)]["score"])
+                        scores[str(member.id)]["score"] -= amount
+                        scores[str(ctx.author.id)]["score"] += int(amount / 2)
+                        await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
+                        if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
+                            scores[str(ctx.author.id)]["items"][has]["count"] -= 1
+                        else:
+                            del scores[str(ctx.author.id)]["items"][has]
+                    else:
+                        await ctx.send("That member does not exist...")
+                else:
+                    await ctx.send("You don't have that item...")
+            elif args[0] in itemaliases["8"]:
+                has = await hasitem(scores, ctx.author.id, 8)
+                if not isinstance(has, bool):
+                    if ctx.message.mentions:
+                        member = ctx.message.mentions[0]
+                    else:
+                        member = ctx.guild.get_member_named(args[1])
+                    if member:
+                        if scores[str(member.id)]["score"] >= 1000:
+                            amount = random.randint(400, 1000)
+                        elif scores[str(member.id)]["score"] < 0:
+                            amount = random.randint(0, scores[str(member.id)]["score"] * -1)
+                        elif scores[str(member.id)]["score"] < 1000:
+                            amount = random.randint(scores[str(member.id)]["score"] * 0.4, scores[str(member.id)]["score"])
                         scores[str(member.id)]["score"] -= amount
                         scores[str(ctx.author.id)]["score"] += int(amount / 2)
                         await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
