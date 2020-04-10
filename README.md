@@ -12,7 +12,7 @@ Dependencies:
 
 Download and run:
 ```
-git clone http://gitlab.com/enjarai/suicidal-memer.git
+git clone https://gitlab.com/enjarai/suicidal-memer.git
 cd suicidal-memer
 mv config.conf.example config.conf
 nano config.conf    # Edit the settings to your liking

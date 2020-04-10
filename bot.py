@@ -579,7 +579,7 @@ async def use(ctx, *args):
                             amount = random.randint(scores[str(member.id)]["score"] * 0.4, scores[str(member.id)]["score"])
                         scores[str(member.id)]["score"] -= amount
                         scores[str(ctx.author.id)]["score"] += int(amount / 2)
-                        await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
+                        await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
                         if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
                             scores[str(ctx.author.id)]["items"][has]["count"] -= 1
                         else:
