@@ -139,8 +139,11 @@ shopcosts = {
 print("connecting...")
 
 
-def check(reaction, user):
-    return reaction.message.channel == client.get_channel(int(channelid)) and not user.id == client.user.id
+#def check(reaction, user):
+#    return reaction.message.channel == client.get_channel(int(channelid)) and not user.id == client.user.id
+
+def check(payload):
+    return payload.channel_id == int(channelid) and not payload.user_id == client.user.id
 
 async def save():
     with open("scores.json", "w") as f:
@@ -192,28 +195,36 @@ async def background():
             await embedmsg.add_reaction(emoji.emojize(k, use_aliases=True))
         tries = 0
         while True:
-            ua = await client.wait_for("reaction_add", check=check)
-            await ua[0].remove(ua[1])
-            if emoji.demojize(ua[0].emoji, use_aliases=True) in q["correct"]:
+            payload = await client.wait_for("raw_reaction_add", check=check)
+            guild = client.get_guild(payload.guild_id)
+            member = guild.get_member(payload.user_id)
+            channel = guild.get_channel(payload.channel_id)
+            rawemoji = payload.emoji
+            message = await channel.fetch_message(payload.message_id)
+            await message.remove_reaction(rawemoji, member)
+            #ua = await client.wait_for("reaction_add", check=check)
+            #await ua[0].remove(ua[1])
+            if emoji.demojize(str(rawemoji), use_aliases=True) in q["correct"]:
                 points = (10 - (2 * tries)) * triviamultiplier
-                embed=discord.Embed(description="🟢 {} has earned {} points!".format(ua[1], points))
+                embed=discord.Embed(description="🟢 {} has earned {} points!".format(member, points))
                 await channel.send(embed=embed)
-                if str(ua[1].id) in scores:
-                    if "score" in scores[str(ua[1].id)]:
-                        scores[str(ua[1].id)]["score"] += points
+                memberidstr = str(member.id)
+                if memberidstr in scores:
+                    if "score" in scores[memberidstr]:
+                        scores[memberidstr]["score"] += points
                     else:
-                        scores[str(ua[1].id)]["score"] = points
+                        scores[memberidstr]["score"] = points
                 else:
-                    scores[str(ua[1].id)] = {}
-                    scores[str(ua[1].id)]["score"] = points
+                    scores[memberidstr] = {}
+                    scores[memberidstr]["score"] = points
                 if random.randint(1, 10) == 1:
-                    await giveitem(ua[1], lootboxtemplate, 1)
-                    await channel.send(f"{ua[1].mention}: Wow, you found a loot box!")
+                    await giveitem(member, lootboxtemplate, 1)
+                    await channel.send(f"{member.mention}: Wow, you found a loot box!")
                 break
             else:
                 if tries < 4:
                     tries += 1
-                embed=discord.Embed(description="🔴 {} has answered wrongly!".format(ua[1]))
+                embed=discord.Embed(description="🔴 {} has answered wrongly!".format(member))
                 await channel.send(embed=embed)
 
 async def background2():
