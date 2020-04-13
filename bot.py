@@ -165,6 +165,11 @@ shopcosts = {
     "9": 420,
     "10": 200
 }
+effectemoji = {
+    "dice": "<:dice:632295947552030741>",
+    "uno": "<:unoreverse:699194687646597130>",
+    "vault": "<:vault:699266653791322172>"
+}
 
 print("connecting...")
 
@@ -203,8 +208,7 @@ async def hasitem(userid, itemid):
     found = False
     for item in scores[str(userid)]["items"]:
         if item["id"] == itemid:
-            found = True
-            #scores[str(userid)]["items"].index(item)
+            found = scores[str(userid)]["items"].index(item)
             break
     return found
 
@@ -332,20 +336,48 @@ async def on_message(message):
                 await giveitem(message.author, lootboxtemplate, 1)
     await client.process_commands(message)
 
-@client.command(aliases=["bal", "money"])
+@client.command(aliases=["bal", "money", "status"])
 async def points(ctx, *args):
-    """𝅘𝅥𝅮  it's all about the money, money, money 𝅘𝅥𝅮 """
+    """CAPITALISM BOYS"""
     if len(args) == 1:
         if ctx.message.mentions:
             member = ctx.message.mentions[0]
         else:
             member = ctx.guild.get_member_named(args[0])
-        if member:
-            await ctx.send("{}: hav got `{}` points!".format(member.mention, scores[str(member.id)]["score"]))
-        else:
-            await ctx.send("I don't know them")
     else:
-        await ctx.send("{}: u got `{}` points!".format(ctx.author.mention, scores[str(ctx.author.id)]["score"]))
+        member = ctx.author
+
+    if not member:
+        await ctx.send("I don't know them")
+        return
+
+    #effects = ""
+    #for k, i in scores[str(member.id)]["effects"].items():
+    #    effects += f"{i}x {k}, "
+    #if effects:
+    #    effects = effects[:2]
+    #else:
+    #    effects = "none"
+
+    vaults = []
+    if "vault" in scores[str(member.id)]["effects"]:
+        vaultsnum = scores[str(member.id)]["effects"]["vault"]
+    else:
+        vaultsnum = 0
+
+    for i in range(vaultsnum):
+        print(i)
+        vaults.append("<:vault:699266653791322172>")
+    for i in range(3 - vaultsnum):
+        print(i)
+        vaults.append("⭕")
+    if "uno" in scores[str(member.id)]["effects"]:
+        vaults.append("(<:unoreverse:699194687646597130>)")
+    vaults = " ".join(vaults)
+
+    embed = discord.Embed(title="Status:", description=f"{scores[str(member.id)]['score']} <:coin:632592319245451286>\n**Active vaults:**\n{vaults}", colour=discord.Colour(0x70a231))
+    embed.set_author(name=member.name, icon_url=member.avatar_url)
+    await ctx.send(embed=embed)
 
 @client.command()
 async def mclink(ctx, mcacc: str):
@@ -480,7 +512,8 @@ async def use(ctx, *args):
         await ctx.send("Unknown item that")
         return
     
-    if not await hasitem(authorid, itemid):
+    has = await hasitem(authorid, itemid)
+    if isinstance(has, bool):
         await ctx.send("You dont own that shit man")
         return
 
@@ -541,12 +574,16 @@ async def use(ctx, *args):
                 scores[str(ctx.author.id)]["score"] -= amount
                 await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had an uno reverse card active! you lost `{amount}` points!")
                 await remeffect(ctx.author.id, "uno")
+            elif "vault" in scores[str(member.id)]["effects"]:
+                await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had a vault active and you lost your mask!")
+                await remeffect(ctx.author.id, "vault")
             else:
                 scores[str(member.id)]["score"] -= amount
                 scores[str(ctx.author.id)]["score"] += amount
                 await ctx.send(ctx.author.mention + f": You robbed {member.mention}, you managed to get away with `{amount}` points!")
         else:
             await ctx.send(ctx.author.mention + f": You cant rob {member.mention}! They're way too poor, thats pathetic... *shakes head disapprovingly*")
+            return # CHANGE THIS IF MORE SHIT IS ADDED AT THE END
     elif itemid == 5:
         await ctx.send(ctx.author.mention + ": You ate the Moldy Bread, why the fuck would you do that? *backs away slowly*\nU got -10 <:coin:632592319245451286> cus thats just nasty")
         scores[str(ctx.author.id)]["score"] -= 10
@@ -569,6 +606,9 @@ async def use(ctx, *args):
             scores[str(ctx.author.id)]["score"] -= amount
             await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
             await remeffect(ctx.author.id, "uno")
+        elif "vault" in scores[str(member.id)]["effects"]:
+            await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
+            await remeffect(ctx.author.id, "vault")
         else:
             scores[str(member.id)]["score"] -= amount
             scores[str(ctx.author.id)]["score"] += int(amount / 2)
@@ -586,19 +626,36 @@ async def use(ctx, *args):
             scores[str(ctx.author.id)]["score"] -= amount
             await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
             await remeffect(ctx.author.id, "uno")
+        elif "vault" in scores[str(member.id)]["effects"]:
+            await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
+            await remeffect(ctx.author.id, "vault")
         else:
             scores[str(member.id)]["score"] -= amount
             scores[str(ctx.author.id)]["score"] += int(amount / 2)
             await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
     elif itemid == 9:
-        await ctx.send(ctx.author.mention + f""": Uno Reverse Card activate! you are now protected from one rob/nuke""")
-        scores[str(ctx.author.id)]["effects"]["uno"] = 1
+        if "uno" in scores[str(ctx.author.id)]["effects"]:
+            await ctx.send(ctx.author.mention + f""": You already an uno card active""")
+            return # CHANGE THIS IF MORE SHIT IS ADDED AT THE END
+        else:
+            await ctx.send(ctx.author.mention + f""": Uno Reverse Card activate! you are now protected from one rob/nuke""")
+            scores[str(ctx.author.id)]["effects"]["uno"] = 1
+    elif itemid == 10:
+        if "vault" in scores[str(ctx.author.id)]["effects"]:
+            if scores[str(ctx.author.id)]["effects"]["vault"] <= 3:
+                scores[str(ctx.author.id)]["effects"]["vault"] += 1
+            else:
+                await ctx.send(ctx.author.mention + f""": You already have 3 vaults active""")
+                return # CHANGE THIS IF MORE SHIT IS ADDED AT THE END
+        else:
+            scores[str(ctx.author.id)]["effects"]["vault"] = 1
+        await ctx.send(ctx.author.mention + f""": Used item""")
+
     
-    
-    if scores[authoridstr]["items"][itemid]["count"] > 1:
-        scores[authoridstr]["items"][itemid]["count"] -= 1
+    if scores[authoridstr]["items"][has]["count"] > 1:
+        scores[authoridstr]["items"][has]["count"] -= 1
     else:
-        del scores[authoridstr]["items"][itemid]
+        del scores[authoridstr]["items"][has]
 
 @use.error
 async def use_error(ctx, error):
@@ -606,7 +663,7 @@ async def use_error(ctx, error):
 
 @client.command(aliases=["xp"])
 async def level(ctx, *args):
-    """You probably won't get any higher than 2 or 3 tbh"""
+    """Is this an mmorpg or somethin?"""
     if len(args) == 1:
         if ctx.message.mentions:
             member = ctx.message.mentions[0]
