@@ -86,7 +86,7 @@ vault = {
 }
 lockpick = {
     "displayname": "Lockpick",
-    "emoji": "<:unoreverse:699194687646597130>",
+    "emoji": "<:lockpick:699275348675657788>",
     "id": 11,
 }
 
@@ -711,29 +711,32 @@ async def coinflip(ctx):
         await ctx.send("Tails!")
 
 @client.command(aliases=["buy"])
-async def shop(ctx, buythis=None):
+async def shop(ctx, buythis=None, amount=1):
     """Yo whattup come buy some stuffs"""
-    if buythis:
-        buythisid = 0
-        for item in itemaliases:
-            if item in shopcosts and buythis in itemaliases[item]:
-                buythisid = int(item)
-                break
-        if buythisid:
-            if scores[str(ctx.author.id)]["score"] >= shopcosts[str(buythisid)]:
-                await ctx.send(f"""{ctx.author.mention}: you bought 1 {itemindex[str(buythisid)]["emoji"]} {itemindex[str(buythisid)]["displayname"]}""")
-                scores[str(ctx.author.id)]["score"] -= shopcosts[str(buythisid)]
-                await giveitem(ctx.author, itemindex[str(buythisid)], 1)
-            else:
-                await ctx.send("U ain't got da cash m8")
-        else:
-            await ctx.send("I don't sell that")
-    else:
+    if not buythis:
         embed = discord.Embed(title="For sale:", colour=discord.Colour(0x70a231))
         embed.set_author(name="yo whattup come buy some stuffs", icon_url=client.user.avatar_url)
         for item in shopcosts:
             embed.add_field(name=f"""**{itemindex[item]["emoji"]} {itemindex[item]["displayname"]}** - {shopcosts[item]} Points""", value=itemdescriptions[item], inline=False)
         await ctx.send(embed=embed)
+        return
+
+    buythisid = 0
+    for item in itemaliases:
+        if item in shopcosts and buythis in itemaliases[item]:
+            buythisid = int(item)
+            break
+    if not buythisid:
+        await ctx.send("I don't sell that")
+        return
+
+    if scores[str(ctx.author.id)]["score"] >= shopcosts[str(buythisid)] * amount:
+        await ctx.send(f"""{ctx.author.mention}: you bought {amount} {itemindex[str(buythisid)]["emoji"]} {itemindex[str(buythisid)]["displayname"]}""")
+        scores[str(ctx.author.id)]["score"] -= shopcosts[str(buythisid)] * amount
+        await giveitem(ctx.author, itemindex[str(buythisid)], amount)
+    else:
+        await ctx.send("U ain't got da cash m8")
+                
 
 @client.command()
 async def helpiminfuckingdebt(ctx):
