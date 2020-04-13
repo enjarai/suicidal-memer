@@ -114,7 +114,7 @@ itemdescriptions = {
     "8": "The cooler daniel",
     "9": "Use this to ward off those pesky thieves",
     "10": "Protect your precious points, stops one attack each, 3 allowed active at once",
-    "11": "Not yet implemented"
+    "11": "Removes a vault, nothing else"
 }
 itemmax = {
     "0": 200,
@@ -126,7 +126,8 @@ itemmax = {
     "7": 2,
     "8": 1,
     "9": 1,
-    "10": 2
+    "10": 2,
+    "11": 1
 }
 itemchances = {
     "0": 15,
@@ -138,7 +139,8 @@ itemchances = {
     "7": 5,
     "8": 3,
     "9": 1,
-    "10": 7
+    "10": 7,
+    "11": 5
 }
 itemindex = {
     "1": lootboxtemplate,
@@ -162,8 +164,9 @@ shopcosts = {
     "6": 80,
     "7": 100,
     "8": 1000,
-    "9": 420,
-    "10": 200
+    "9": 1200,
+    "10": 200,
+    "11": 300
 }
 effectemoji = {
     "dice": "<:dice:632295947552030741>",
@@ -497,7 +500,7 @@ async def iteminfo_error(ctx, error):
 @client.command(aliases=["open", "eat"])
 async def use(ctx, *args):
     """Do something with your random crap"""
-    REQUIRE_TWO_ARGS = [3, 4, 7, 8]
+    REQUIRE_TWO_ARGS = [3, 4, 7, 8, 11]
     authorid = ctx.author.id
     authoridstr = str(authorid)
 
@@ -650,7 +653,13 @@ async def use(ctx, *args):
         else:
             scores[str(ctx.author.id)]["effects"]["vault"] = 1
         await ctx.send(ctx.author.mention + f""": Used item""")
-
+    elif itemid == 11:
+        if "vault" in scores[str(member.id)]["effects"]:
+            await remeffect(member.id, "vault")
+            await ctx.send(ctx.author.mention + f""": You cracked one of {member.mention}'s vaults!'""")
+        else:
+            await ctx.send(ctx.author.mention + f""": {member.mention} has no vaults active""")
+            return # CHANGE THIS IF MORE SHIT IS ADDED AT THE END
     
     if scores[authoridstr]["items"][has]["count"] > 1:
         scores[authoridstr]["items"][has]["count"] -= 1
