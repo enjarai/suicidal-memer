@@ -74,6 +74,11 @@ nuke2 = {
     "emoji": "<:nuke2:698057397574303784>",
     "id": 8,
 }
+unoreverse = {
+    "displayname": "Uno Reverse Card",
+    "emoji": "<:unoreverse:699194687646597130>",
+    "id": 9,
+}
 
 itemaliases = {
     "1": ["lootbox", "loot box", "loot"],
@@ -83,7 +88,8 @@ itemaliases = {
     "5": ["bread", "moldy", "moldybread", "moldy bread"],
     "6": ["fortune", "cookie", "fortunecookie", "fortune cookie"],
     "7": ["nuke", "big boom"],
-    "8": ["nuke2", "big boom 2", "bigboom2", "nuke2electricboogaloo"]
+    "8": ["nuke2", "big boom 2", "bigboom2", "nuke2electricboogaloo"],
+    "9": ["uno", "unoreverse", "unoreversecard", "uno reverse", "uno reverse card"]
 }
 itemdescriptions = {
     "1": "Some say it's gambling, so imma add it while it's legal...",
@@ -93,7 +99,8 @@ itemdescriptions = {
     "5": "Why would you keep this?",
     "6": "Shows you your true fortune!",
     "7": "Kim jong un wants to know your location. DISCOUNT 90%!!!111!!1!!1",
-    "8": "The cooler daniel"
+    "8": "The cooler daniel",
+    "9": "Use this to ward off those pesky thieves"
 }
 itemmax = {
     "0": 200,
@@ -102,18 +109,20 @@ itemmax = {
     "4": 1,
     "5": 1,
     "6": 10,
-    "7": 1,
-    "8": 1
+    "7": 2,
+    "8": 1,
+    "9": 1
 }
 itemchances = {
-    "0": 10,
+    "0": 15,
     "2": 10,
     "3": 15,
     "4": 7,
-    "5": 5,
+    "5": 1,
     "6": 10,
     "7": 5,
-    "8": 3
+    "8": 3,
+    "9": 1
 }
 itemindex = {
     "1": lootboxtemplate,
@@ -123,7 +132,8 @@ itemindex = {
     "5": moldybread,
     "6": fortunecookie,
     "7": nuke,
-    "8": nuke2
+    "8": nuke2,
+    "9": unoreverse
 }
 shopcosts = {
     "1": 500,
@@ -133,7 +143,8 @@ shopcosts = {
     "5": 20,
     "6": 80,
     "7": 100,
-    "8": 1000
+    "8": 1000,
+    "9": 420
 }
 
 print("connecting...")
@@ -176,6 +187,13 @@ async def hasitem(scores, userid, itemid):
             found = scores[str(userid)]["items"].index(item)
             break
     return found
+
+async def remeffect(userid: str, effect):
+    userid = str(userid)
+    if scores[userid]["effects"][effect] > 1:
+        scores[userid]["effects"][effect] -= 1
+    else:
+        del scores[userid]["effects"][effect]
 
 async def background():
     await client.wait_until_ready()
@@ -498,6 +516,17 @@ async def use(ctx, *args):
                         del scores[str(ctx.author.id)]["items"][has]
                 else:
                     await ctx.send("You don't have that item...")
+            elif args[0] in itemaliases["9"]:
+                has = await hasitem(scores, ctx.author.id, 9)
+                if not isinstance(has, bool):
+                    await ctx.send(ctx.author.mention + f""": Uno Reverse Card activate! you are now protected from one rob/nuke""")
+                    scores[str(ctx.author.id)]["effects"]["uno"] = 1
+                    if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
+                        scores[str(ctx.author.id)]["items"][has]["count"] -= 1
+                    else:
+                        del scores[str(ctx.author.id)]["items"][has]
+                else:
+                    await ctx.send("You don't have that item...")
             else:
                 await ctx.send("That item does not exist...")
         elif len(args) == 2:
@@ -538,9 +567,16 @@ async def use(ctx, *args):
                         else:
                             amount = random.randint(40, scores[str(member.id)]["score"])
                         if amount:
-                            scores[str(member.id)]["score"] -= amount
-                            scores[str(ctx.author.id)]["score"] += amount
-                            await ctx.send(ctx.author.mention + f": You robbed {member.mention}, you managed to get away with `{amount}` points!")
+                            if "uno" in scores[str(member.id)]["effects"]:
+                                amount = int(amount / 2)
+                                scores[str(member.id)]["score"] += amount
+                                scores[str(ctx.author.id)]["score"] -= amount
+                                await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had an uno reverse card active! you lost `{amount}` points!")
+                                await remeffect(ctx.author.id, "uno")
+                            else:
+                                scores[str(member.id)]["score"] -= amount
+                                scores[str(ctx.author.id)]["score"] += amount
+                                await ctx.send(ctx.author.mention + f": You robbed {member.mention}, you managed to get away with `{amount}` points!")
                             if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
                                 scores[str(ctx.author.id)]["items"][has]["count"] -= 1
                             else:
@@ -563,9 +599,16 @@ async def use(ctx, *args):
                             amount = random.randint(0, scores[str(member.id)]["score"] * -1) * -1
                         elif scores[str(member.id)]["score"] < 500:
                             amount = random.randint(0, scores[str(member.id)]["score"])
-                        scores[str(member.id)]["score"] -= amount
-                        scores[str(ctx.author.id)]["score"] += int(amount / 2)
-                        await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
+                        if "uno" in scores[str(member.id)]["effects"]:
+                            amount = int(amount / 2)
+                            scores[str(member.id)]["score"] += int(amount / 2)
+                            scores[str(ctx.author.id)]["score"] -= amount
+                            await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
+                            await remeffect(ctx.author.id, "uno")
+                        else:
+                            scores[str(member.id)]["score"] -= amount
+                            scores[str(ctx.author.id)]["score"] += int(amount / 2)
+                            await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
                         if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
                             scores[str(ctx.author.id)]["items"][has]["count"] -= 1
                         else:
@@ -587,10 +630,17 @@ async def use(ctx, *args):
                         elif scores[str(member.id)]["score"] < 0:
                             amount = random.randint(0, scores[str(member.id)]["score"] * -1)
                         elif scores[str(member.id)]["score"] < 1000:
-                            amount = random.randint(scores[str(member.id)]["score"] * 0.4, scores[str(member.id)]["score"])
-                        scores[str(member.id)]["score"] -= amount
-                        scores[str(ctx.author.id)]["score"] += int(amount / 2)
-                        await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
+                            amount = random.randint(int(scores[str(member.id)]["score"] * 0.4), scores[str(member.id)]["score"])
+                        if "uno" in scores[str(member.id)]["effects"]:
+                            amount = int(amount / 2)
+                            scores[str(member.id)]["score"] += int(amount / 2)
+                            scores[str(ctx.author.id)]["score"] -= amount
+                            await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
+                            await remeffect(ctx.author.id, "uno")
+                        else:
+                            scores[str(member.id)]["score"] -= amount
+                            scores[str(ctx.author.id)]["score"] += int(amount / 2)
+                            await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
                         if scores[str(ctx.author.id)]["items"][has]["count"] > 1:
                             scores[str(ctx.author.id)]["items"][has]["count"] -= 1
                         else:
