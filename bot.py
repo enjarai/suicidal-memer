@@ -658,7 +658,7 @@ async def use(ctx, *args):
             scores[str(ctx.author.id)]["effects"]["uno"] = 1
     elif itemid == 10:
         if "vault" in scores[str(ctx.author.id)]["effects"]:
-            if scores[str(ctx.author.id)]["effects"]["vault"] <= 3:
+            if scores[str(ctx.author.id)]["effects"]["vault"] < 3:
                 scores[str(ctx.author.id)]["effects"]["vault"] += 1
             else:
                 await ctx.send(ctx.author.mention + f""": You already have 3 vaults active""")
