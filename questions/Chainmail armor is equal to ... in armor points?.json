@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Iron",
+        ":regional_indicator_b:": "Diamond",
+        ":regional_indicator_c:": "Gold",
+        ":regional_indicator_d:": "Leather"
+    },
+    "correct": [
+        ":regional_indicator_c:"
+    ],
+    "text": "Chainmail armor is equal to ... in armor points?"
+}

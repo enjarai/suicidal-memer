@@ -1,0 +1,12 @@
+{
+    "options": {
+        ":regional_indicator_a:": "Diamond",
+        ":regional_indicator_b:": "Leather",
+        ":regional_indicator_c:": "Gold",
+        ":regional_indicator_d:": "Iron"
+    },
+    "correct": [
+        ":regional_indicator_d:"
+    ],
+    "text": "Chainmail armor is equal to ... in durability?"
+}
