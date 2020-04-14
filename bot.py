@@ -737,6 +737,41 @@ async def shop(ctx, buythis=None, amount=1):
     else:
         await ctx.send("U ain't got da cash m8")
                 
+@client.command(aliases=["sellitem"])
+async def sell(ctx, sellthis, amount=1):
+    """Yo whattup come buy some stuffs"""
+    # if not buythis:
+    #     embed = discord.Embed(title="For sale:", colour=discord.Colour(0x70a231))
+    #     embed.set_author(name="yo whattup come buy some stuffs", icon_url=client.user.avatar_url)
+    #     for item in shopcosts:
+    #         embed.add_field(name=f"""**{itemindex[item]["emoji"]} {itemindex[item]["displayname"]}** - {shopcosts[item]} Points""", value=itemdescriptions[item], inline=False)
+    #     await ctx.send(embed=embed)
+    #     return
+
+    itemid = 0
+    for item in itemaliases:
+        if item in shopcosts and sellthis in itemaliases[item]:
+            itemid = int(item)
+            break
+    if not itemid:
+        await ctx.send("I don't buy that")
+        return
+
+    has = await hasitem(ctx.author.id, itemid)
+    if isinstance(has, bool):
+        await ctx.send("You dont own that shit man")
+        return
+
+    if not scores[str(ctx.author.id)]["items"][has]["count"] >= amount:
+        await ctx.send("You dont have enough of that shit")
+        return
+
+    await ctx.send(f"""{ctx.author.mention}: you sold {amount} {itemindex[str(itemid)]["emoji"]} {itemindex[str(itemid)]["displayname"]} for {shopcosts[str(itemid)] * amount} <:coin:632592319245451286>""")
+    scores[str(ctx.author.id)]["score"] += shopcosts[str(itemid)] * amount
+    if scores[str(ctx.author.id)]["items"][has]["count"] > amount:
+        scores[str(ctx.author.id)]["items"][has]["count"] -= amount
+    else:
+        del scores[str(ctx.author.id)]["items"][has]
 
 @client.command()
 async def helpiminfuckingdebt(ctx):
