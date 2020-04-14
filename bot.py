@@ -579,7 +579,7 @@ async def use(ctx, *args):
                 await remeffect(ctx.author.id, "uno")
             elif "vault" in scores[str(member.id)]["effects"]:
                 await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had a vault active and you lost your mask!")
-                await remeffect(ctx.author.id, "vault")
+                await remeffect(member.id, "vault")
             else:
                 scores[str(member.id)]["score"] -= amount
                 scores[str(ctx.author.id)]["score"] += amount
@@ -611,7 +611,7 @@ async def use(ctx, *args):
             await remeffect(ctx.author.id, "uno")
         elif "vault" in scores[str(member.id)]["effects"]:
             await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
-            await remeffect(ctx.author.id, "vault")
+            await remeffect(member.id, "vault")
         else:
             scores[str(member.id)]["score"] -= amount
             scores[str(ctx.author.id)]["score"] += int(amount / 2)
@@ -631,7 +631,7 @@ async def use(ctx, *args):
             await remeffect(ctx.author.id, "uno")
         elif "vault" in scores[str(member.id)]["effects"]:
             await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
-            await remeffect(ctx.author.id, "vault")
+            await remeffect(member.id, "vault")
         else:
             scores[str(member.id)]["score"] -= amount
             scores[str(ctx.author.id)]["score"] += int(amount / 2)
