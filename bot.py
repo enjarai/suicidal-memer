@@ -168,6 +168,19 @@ shopcosts = {
     "10": 200,
     "11": 300
 }
+sellcosts = {
+    "1": 250,
+    "2": 100,
+    "3": 15,
+    "4": 200,
+    "5": 5,
+    "6": 5,
+    "7": 50,
+    "8": 300,
+    "9": 800,
+    "10": 150,
+    "11": 150
+}
 effectemoji = {
     "dice": "<:dice:632295947552030741>",
     "uno": "<:unoreverse:699194687646597130>",
@@ -750,7 +763,7 @@ async def sell(ctx, sellthis, amount=1):
 
     itemid = 0
     for item in itemaliases:
-        if item in shopcosts and sellthis in itemaliases[item]:
+        if item in sellcosts and sellthis in itemaliases[item]:
             itemid = int(item)
             break
     if not itemid:
@@ -766,8 +779,8 @@ async def sell(ctx, sellthis, amount=1):
         await ctx.send("You dont have enough of that shit")
         return
 
-    await ctx.send(f"""{ctx.author.mention}: you sold {amount} {itemindex[str(itemid)]["emoji"]} {itemindex[str(itemid)]["displayname"]} for {shopcosts[str(itemid)] * amount} <:coin:632592319245451286>""")
-    scores[str(ctx.author.id)]["score"] += shopcosts[str(itemid)] * amount
+    await ctx.send(f"""{ctx.author.mention}: you sold {amount} {itemindex[str(itemid)]["emoji"]} {itemindex[str(itemid)]["displayname"]} for {sellcosts[str(itemid)] * amount} <:coin:632592319245451286>""")
+    scores[str(ctx.author.id)]["score"] += sellcosts[str(itemid)] * amount
     if scores[str(ctx.author.id)]["items"][has]["count"] > amount:
         scores[str(ctx.author.id)]["items"][has]["count"] -= amount
     else:
