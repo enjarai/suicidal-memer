@@ -576,7 +576,7 @@ async def use(ctx, *args):
                 scores[str(member.id)]["score"] += amount
                 scores[str(ctx.author.id)]["score"] -= amount
                 await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had an uno reverse card active! you lost `{amount}` points!")
-                await remeffect(ctx.author.id, "uno")
+                await remeffect(member.id, "uno")
             elif "vault" in scores[str(member.id)]["effects"]:
                 await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had a vault active and you lost your mask!")
                 await remeffect(member.id, "vault")
@@ -608,7 +608,7 @@ async def use(ctx, *args):
             scores[str(member.id)]["score"] += int(amount / 2)
             scores[str(ctx.author.id)]["score"] -= amount
             await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
-            await remeffect(ctx.author.id, "uno")
+            await remeffect(member.id, "uno")
         elif "vault" in scores[str(member.id)]["effects"]:
             await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
             await remeffect(member.id, "vault")
@@ -628,7 +628,7 @@ async def use(ctx, *args):
             scores[str(member.id)]["score"] += int(amount / 2)
             scores[str(ctx.author.id)]["score"] -= amount
             await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
-            await remeffect(ctx.author.id, "uno")
+            await remeffect(member.id, "uno")
         elif "vault" in scores[str(member.id)]["effects"]:
             await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
             await remeffect(member.id, "vault")
