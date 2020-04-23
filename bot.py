@@ -32,6 +32,10 @@ for i in qdir:
         q = json.load(f)
     questions.append(q)
 
+trivia = {
+    "next": True,
+    "channel": None
+}
 triviamultiplier = 10
 levelcost = 60
 lootboxtemplate = {
@@ -127,7 +131,7 @@ itemmax = {
     "8": 1,
     "9": 1,
     "10": 2,
-    "11": 1
+    "11": 3
 }
 itemchances = {
     "0": 15,
@@ -140,7 +144,7 @@ itemchances = {
     "8": 3,
     "9": 1,
     "10": 7,
-    "11": 5
+    "11": 10
 }
 itemindex = {
     "1": lootboxtemplate,
@@ -312,6 +316,17 @@ async def background3():
         await asyncio.sleep(60)
         print("saving data...")
         await save()
+
+#WIP
+async def background4():
+    await client.wait_until_ready()
+    print("background4 active")
+    while True:
+        await asyncio.sleep(5)
+        if trivia["next"]:
+            slp = random.randint(triviaminwait, triviamaxwait)
+            print("Waiting {} seconds".format(slp))
+            await asyncio.sleep(slp)
 
 @client.event
 async def on_disconnect():
@@ -795,6 +810,6 @@ async def helpiminfuckingdebt(ctx):
         await ctx.send("no ur not")
 
 if channelid:
-    client.loop.create_task(background())
-client.loop.create_task(background3())
+    bgtask = client.loop.create_task(background())
+bgtask3 = client.loop.create_task(background3())
 client.run(token)
