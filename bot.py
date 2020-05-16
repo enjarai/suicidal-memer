@@ -9,6 +9,7 @@ import operator
 import configparser
 import glob
 import emoji
+import datetime
 client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
 
 global lastid
@@ -24,6 +25,9 @@ triviamaxwait = int(config.get("config", "triviamaxwait"))
 #read "database"
 with open("scores.json", "r") as f:
     scores = json.load(f)
+#read counters
+with open("counters.json", "r") as f:
+    counters = json.load(f)
 
 qdir = glob.glob("./questions/*.json")
 questions = []
@@ -293,21 +297,18 @@ async def background2():
     await client.wait_until_ready()
     print("background2 active")
     while True:
-        await asyncio.sleep(60)
-        print("effect tick...")
-        for user in scores:
-            if not "effects" in scores[user]:
-                scores[user]["effects"] = {}
-            if not scores[user]["effects"] == {}:
-                delete = []
-                for effect in scores[user]["effects"]:
-                    if scores[user]["effects"][effect] > 1:
-                        scores[user]["effects"][effect] -= 1
-                    else:
-                        delete.append(effect)
-                if delete:
-                    for thing in delete:
-                        del scores[user]["effects"][thing]
+        await asyncio.sleep(5)
+        for counter in counters:
+            timeobj = datetime.datetime.strptime(counter["time"], '%Y-%m-%dT%H:%M:%S')
+            timediff = timeobj - datetime.datetime.now()
+            guild = client.get_guild(counter["guild"])
+            channel = guild.get_channel(counter["channel"])
+            message = await channel.fetch_message(counter["message"])
+            if timediff.total_seconds() >= 0:
+                text = ''.join(str(timediff).split('.')[:1])
+            else:
+                text = "Completed!"
+            await message.edit(content=text)
 
 async def background3():
     await client.wait_until_ready()
@@ -508,6 +509,20 @@ async def gimmecash(ctx, giv: int, user=None):
         member = ctx.author
     scores[str(member.id)]["score"] += giv
     await ctx.send(f"""{member.mention}: i got u some of them cash, you filthy cheater""")
+
+@client.command()
+@commands.is_owner()
+async def createcounter(ctx, year: int, month: int, day: int, hour: int):
+    time = datetime.datetime(year, month, day, hour).isoformat()
+    message = await ctx.send("counter")
+    counters.append({
+        "time": time, 
+        "guild": message.guild.id, 
+        "channel": message.channel.id,
+        "message": message.id
+    })
+    with open("counters.json", "w") as f:
+        json.dump(counters, f, indent=4)
 
 @client.command(aliases=["info", "tellmemore"])
 async def iteminfo(ctx, *, item: str):
@@ -811,5 +826,6 @@ async def helpiminfuckingdebt(ctx):
 
 if channelid:
     bgtask = client.loop.create_task(background())
+bgtask2 = client.loop.create_task(background2())
 bgtask3 = client.loop.create_task(background3())
 client.run(token)

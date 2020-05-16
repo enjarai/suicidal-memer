@@ -116,5 +116,6 @@ dmypy.json
 
 config.conf
 scores.json
+#counters.json
 .netrc
 temp.py
