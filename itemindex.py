@@ -1,5 +1,5 @@
 class Item(object):
-    def __init__(self, itemid: int, use: object, name: str, emoji=":question:", aliases=[], description="#PLACEHOLDER", lootboxmax=0, lootboxweight=0, buy=0, sell=0):
+    def __init__(self, itemid: int, use: object, name: str, emoji=":question:", aliases=[], description="#PLACEHOLDER", lootboxmax=0, lootboxweight=0, buy=0, sell=0, useargs=""):
         self.id = itemid
         self.use = use
         self.name = name
@@ -10,6 +10,7 @@ class Item(object):
         self.lootboxweight = lootboxweight
         self.buy = buy
         self.sell = sell
+        self.useargs = useargs
 
         lowername = name.lower()
         self.aliases.append(lowername.strip())
