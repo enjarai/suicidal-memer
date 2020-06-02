@@ -97,6 +97,16 @@ lockpick = {
     "emoji": "<:lockpick:699275348675657788>",
     "id": 11,
 }
+rulebook = {
+    "displayname": "Uno Rulebook",
+    "emoji": "<:lockpick:699275348675657788>",
+    "id": 12,
+}
+tinfoilhat = {
+    "displayname": "Tinfoil Hat",
+    "emoji": "<:lockpick:699275348675657788>",
+    "id": 13,
+}
 
 itemaliases = {
     "1": ["lootbox", "loot box", "loot"],
@@ -109,7 +119,9 @@ itemaliases = {
     "8": ["nuke2", "big boom 2", "bigboom2", "nuke2electricboogaloo"],
     "9": ["uno", "unoreverse", "unoreversecard", "uno reverse", "uno reverse card"],
     "10": ["vault"],
-    "11": ["lockpick", "pick"]
+    "11": ["lockpick", "pick"],
+    "12": ["rules", "rulebook", "rule"],
+    "13": ["tinfoil", "hat", "tinfoilhat"]
 }
 itemdescriptions = {
     "1": "Some say it's gambling, so imma add it while it's legal...",
@@ -120,36 +132,51 @@ itemdescriptions = {
     "6": "Shows you your true fortune!",
     "7": "Kim jong un wants to know your location. DISCOUNT 90%!!!111!!1!!1",
     "8": "The cooler daniel",
-    "9": "Use this to ward off those pesky thieves",
+    "9": "Use this to ward off those pesky thieves once and for all",
     "10": "Protect your precious points, stops one attack each, 3 allowed active at once",
-    "11": "Removes a vault, nothing else"
+    "11": "Removes a vault, nothing else",
+    "12": "Removes an Uno Reverse Card, nothing else",
+    "13": "PLACEHOLDER"
 }
-itemmax = {
-    "0": 200,
-    "2": 3,
-    "3": 5,
-    "4": 1,
-    "5": 1,
-    "6": 10,
-    "7": 2,
-    "8": 1,
-    "9": 1,
-    "10": 2,
-    "11": 3
-}
-itemchances = {
-    "0": 15,
-    "2": 10,
-    "3": 15,
-    "4": 7,
-    "5": 1,
-    "6": 10,
-    "7": 5,
-    "8": 3,
-    "9": 1,
-    "10": 7,
-    "11": 10
-}
+lootboxmax = [
+    400,
+    3,
+    5,
+    1,
+    1,
+    10,
+    1,
+    1,
+    1,
+    1,
+    2
+]
+lootboxchances = [
+    2000,
+    1000,
+    2000,
+    400,
+    100,
+    1500,
+    200,
+    80,
+    40,
+    400,
+    1000
+]
+lootboxitems = [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+]
 itemindex = {
     "1": lootboxtemplate,
     "2": loadeddice,
@@ -161,7 +188,9 @@ itemindex = {
     "8": nuke2,
     "9": unoreverse,
     "10": vault,
-    "11": lockpick
+    "11": lockpick,
+    "12": rulebook,
+    "13": tinfoilhat
 }
 shopcosts = {
     "1": 500,
@@ -582,13 +611,15 @@ async def use(ctx, *args):
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         for i in range(3):
             print(i)
-            addthislist = []
-            for ii in list(itemmax.keys()):
-                for iii in range(itemchances[ii]):
-                    print(iii)
-                    addthislist.append(ii)
-            addthis = random.choice(addthislist)
-            amount = random.randint(1, itemmax[addthis])
+            addthis = random.choices(lootboxitems, lootboxchances)[0]
+            # addthislist = []
+            # for ii in list(itemmax.keys()):
+            #     for iii in range(itemchances[ii]):
+            #         print(iii)
+            #         addthislist.append(ii)
+            # addthis = random.choice(addthislist)
+            amount = random.randint(1, lootboxmax[lootboxitems.index(addthis)])
+            addthis = str(addthis)
             if addthis == "0":
                 embed.add_field(name="<:coin:632592319245451286>", value=f"""{amount} Points""", inline=True)
                 scores[str(ctx.author.id)]["score"] += amount
