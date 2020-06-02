@@ -580,6 +580,7 @@ async def use(ctx, *args):
         await ctx.send("Pls tell me item thx")
         return
 
+    itemid = 0
     for k, i in itemaliases.items():
         if args[0] in i:
             itemid = int(k)
