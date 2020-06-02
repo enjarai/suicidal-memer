@@ -12,7 +12,9 @@ import emoji
 import datetime
 client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
 
-global lastid
+# custom imports
+from itemindex import Item, ItemIndex
+
 lastid = {}
 
 config = configparser.ConfigParser()
@@ -21,6 +23,7 @@ token = config.get("config", "token")
 channelid = config.get("config", "triviachannel")
 triviaminwait = int(config.get("config", "triviaminwait"))
 triviamaxwait = int(config.get("config", "triviamaxwait"))
+index = ItemIndex("main")
 
 #read "database"
 with open("scores.json", "r") as f:
@@ -224,6 +227,29 @@ effectemoji = {
     "vault": "<:vault:699266653791322172>"
 }
 
+def item_lootbox():
+    embed = discord.Embed(title="Loot Box opened!", description="You got:", colour=discord.Colour(0x70a231))
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+    for i in range(3):
+        print(i)
+        addthis = random.choices(lootboxitems, lootboxchances)[0]
+        # addthislist = []
+        # for ii in list(itemmax.keys()):
+        #     for iii in range(itemchances[ii]):
+        #         print(iii)
+        #         addthislist.append(ii)
+        # addthis = random.choice(addthislist)
+        amount = random.randint(1, lootboxmax[lootboxitems.index(addthis)])
+        addthis = str(addthis)
+        if addthis == "0":
+            embed.add_field(name="<:coin:632592319245451286>", value=f"""{amount} Points""", inline=True)
+            scores[str(ctx.author.id)]["score"] += amount
+        else:
+            embed.add_field(name=itemindex[addthis]["emoji"], value=f"""{amount}x {itemindex[addthis]["displayname"]}""", inline=True)
+            await giveitem(ctx.author, itemindex[addthis], amount)
+    await ctx.send(embed=embed)
+
+
 print("connecting...")
 
 
@@ -365,7 +391,6 @@ async def on_disconnect():
 
 @client.event
 async def on_message(message):
-    global lastid
     if not message.author.id == client.user.id:
         if not str(message.channel.id) in lastid:
             lastid[str(message.channel.id)] = 0
