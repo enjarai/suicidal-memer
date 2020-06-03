@@ -14,7 +14,7 @@ class Item(object):
 
         if genaliases:
             lowername = name.lower()
-            self.aliases.append(lowername.strip())
+            self.aliases.append(lowername.replace(" ", ""))
             for i in lowername.split():
                 self.aliases.append(i)
             self.aliases = list(set(self.aliases))
