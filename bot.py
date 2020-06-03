@@ -11,6 +11,7 @@ import glob
 import emoji
 import datetime
 client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
+client.remove_command("help")
 
 # custom imports
 from itemindex import Item, ItemIndex
@@ -99,16 +100,16 @@ index.add(
 )
 
 
-async def item_dice(ctx):
+async def item_dice(ctx, amount: int):
     """
-    Using this before gambling increases your chance of winning to 66%.
+    Using this instead of gambling increases your chance of winning to 66%.
     (Don't use this at a real casino, cus i think thats illegal)
 
-    *\* this is janky will rework soon(tm)*
+    *\* it has been reworked! wow*
     """
-    scores[str(ctx.author.id)]["effects"]["dice"] = 1
-    await ctx.send(ctx.author.mention + ": used item")
-    return True
+    odds = [66, 34]
+
+    return await int_gamble(ctx, amount, odds)
 
 index.add(
     use=item_dice,
@@ -119,7 +120,8 @@ index.add(
     lootboxmax=3,
     lootboxweight=1000,
     buy=200,
-    sell=100
+    sell=100,
+    useargs="i"
 )
 
 
@@ -666,30 +668,65 @@ async def mclink(ctx, mcacc: str):
         scores[str(ctx.author.id)]["mcacc"] = mcacc
         await ctx.send("Database updated!")
 
-@client.command(aliases=["bet", "casino"])
-async def gamble(ctx, amount: int):
-    """Come on, have a try. You have a 50% chance to double your bet"""
-    if amount < 1:
-        await ctx.send("nice try")
-        return
-    if str(ctx.author.id) in scores and "score" in scores[str(ctx.author.id)] and scores[str(ctx.author.id)]["score"] >= amount:
-        if "dice" in scores[str(ctx.author.id)]["effects"]:
-            await ctx.send("wow man! you have an active Loaded Dice, your chance of winning is 66% instead of 50%")
-            randbool = random.choice([True, True, False])
-            if scores[str(ctx.author.id)]["effects"]["dice"] > 1:
-                scores[str(ctx.author.id)]["effects"]["dice"] -= 1
-            else:
-                del scores[str(ctx.author.id)]["effects"]["dice"]
-        else:
-            randbool = random.choice([True, False])
-        if randbool:
-            scores[str(ctx.author.id)]["score"] += amount
-            await ctx.send("You won! Your bet was doubled!\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
-        else:
-            scores[str(ctx.author.id)]["score"] -= amount
-            await ctx.send("You lost! This is so sad...\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
+async def int_gamble(ctx, amount: int, odds):
+    if amount == 0:
+        await ctx.send("Thats not gonna work m8")
+        return False
+    elif amount > 0:
+        if scores[str(ctx.author.id)]["score"] < amount:
+            await ctx.send("You can't gamble what you don't have")
+            return False
     else:
-        await ctx.send("You can't gamble what you don't have")
+        if scores[str(ctx.author.id)]["score"] > amount:
+            await ctx.send("You can't gamble what you don't have")
+            return False
+
+    if random.choices([True, False], odds)[0]:
+        scores[str(ctx.author.id)]["score"] += amount
+        await ctx.send("Odds: {}%\nYou won! Your bet was doubled!\nNew balance: `{}`".format(odds[0], scores[str(ctx.author.id)]["score"]))
+    else:
+        scores[str(ctx.author.id)]["score"] -= amount
+        await ctx.send("Odds: {}%\nYou lost! This is so sad...\nNew balance: `{}`".format(odds[0], scores[str(ctx.author.id)]["score"]))
+
+    return True
+
+@client.command(aliases=["bet", "casino"])
+async def gamble(ctx, amount=None):
+    """Come on, have a try. You have a 50% chance to double your bet"""
+    # if amount < 1:
+    #     await ctx.send("nice try")
+    #     return
+    # if str(ctx.author.id) in scores and "score" in scores[str(ctx.author.id)] and scores[str(ctx.author.id)]["score"] >= amount:
+    #     if "dice" in scores[str(ctx.author.id)]["effects"]:
+    #         await ctx.send("wow man! you have an active Loaded Dice, your chance of winning is 66% instead of 50%")
+    #         randbool = random.choice([True, True, False])
+    #         if scores[str(ctx.author.id)]["effects"]["dice"] > 1:
+    #             scores[str(ctx.author.id)]["effects"]["dice"] -= 1
+    #         else:
+    #             del scores[str(ctx.author.id)]["effects"]["dice"]
+    #     else:
+    #         randbool = random.choice([True, False])
+    #     if randbool:
+    #         scores[str(ctx.author.id)]["score"] += amount
+    #         await ctx.send("You won! Your bet was doubled!\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
+    #     else:
+    #         scores[str(ctx.author.id)]["score"] -= amount
+    #         await ctx.send("You lost! This is so sad...\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
+    # else:
+    #     await ctx.send("You can't gamble what you don't have")
+    if not amount:
+        await ctx.send("How much to gamble?") # change this later
+        return
+    try:
+        amount = int(amount)
+    except ValueError:
+        await ctx.send("Thats not number tho")
+        return
+        
+    
+    odds = [50, 50]
+
+    await int_gamble(ctx, amount, odds)
 
 @gamble.error
 async def gamble_error(ctx, error):
@@ -823,6 +860,17 @@ async def use(ctx, *args):
                 return
 
         rmitem = await item.use(ctx, member)
+    elif item.useargs == "i":
+        if len(args) == 1:
+            await ctx.send("How much to gamble?") # change this later
+            return
+        try:
+            amount = int(args[1])
+        except ValueError:
+            await ctx.send("Thats not number tho")
+            return
+        
+        rmitem = await item.use(ctx, amount)
     else:
         rmitem = await item.use(ctx)
 
@@ -871,10 +919,7 @@ async def baltop(ctx):
 @client.command(aliases=["coin"])
 async def coinflip(ctx):
     """I think its pretty self-explanatory tbh"""
-    if random.choice([True, False]):
-        await ctx.send("Heads!")
-    else:
-        await ctx.send("Tails!")
+    await ctx.send(random.choice(["Heads!", "Tails!"]))
 
 @client.command(aliases=["buy"])
 async def shop(ctx, buythis=None, amount=1):
