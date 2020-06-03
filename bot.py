@@ -45,182 +45,7 @@ trivia = {
 }
 triviamultiplier = 10
 levelcost = 60
-lootboxtemplate = {
-    "displayname": "Loot Box",
-    "emoji": "<:lootbox:632286669592199217>",
-    "id": 1
-}
-loadeddice = {
-    "displayname": "Loaded Dice",
-    "emoji": "<:dice:632295947552030741>",
-    "id": 2
-}
-spambot = {
-    "displayname": "Spambot",
-    "emoji": "<:spambot:632466831063646221>",
-    "id": 3
-}
-robbersmask = {
-    "displayname": "Robbers Mask",
-    "emoji": "<:balaclava:632658938437042212>",
-    "id": 4
-}
-moldybread = {
-    "displayname": "Moldy Bread",
-    "emoji": "<:moldybread:632921575649443909>",
-    "id": 5
-}
-fortunecookie = {
-    "displayname": "Fortune Cookie",
-    "emoji": "<:fortunecookie:633286682195525653>",
-    "id": 6
-}
-nuke = {
-    "displayname": "Nuke",
-    "emoji": "<:nuke:671718044078440448>",
-    "id": 7,
-}
-nuke2 = {
-    "displayname": "Nuke 2: Electric Boogaloo",
-    "emoji": "<:nuke2:698057397574303784>",
-    "id": 8,
-}
-unoreverse = {
-    "displayname": "Uno Reverse Card",
-    "emoji": "<:unoreverse:699194687646597130>",
-    "id": 9,
-}
-vault = {
-    "displayname": "Vault",
-    "emoji": "<:vault:699266653791322172>",
-    "id": 10,
-}
-lockpick = {
-    "displayname": "Lockpick",
-    "emoji": "<:lockpick:699275348675657788>",
-    "id": 11,
-}
-rulebook = {
-    "displayname": "Uno Rulebook",
-    "emoji": "<:lockpick:699275348675657788>",
-    "id": 12,
-}
-tinfoilhat = {
-    "displayname": "Tinfoil Hat",
-    "emoji": "<:lockpick:699275348675657788>",
-    "id": 13,
-}
 
-itemaliases = {
-    "1": ["lootbox", "loot box", "loot"],
-    "2": ["dice", "loaded dice", "loadeddice"],
-    "3": ["bot", "spam", "spambot", "spam bot"],
-    "4": ["mask", "robber", "robbersmask", "robbers mask", "robbermask"],
-    "5": ["bread", "moldy", "moldybread", "moldy bread"],
-    "6": ["fortune", "cookie", "fortunecookie", "fortune cookie"],
-    "7": ["nuke", "big boom"],
-    "8": ["nuke2", "big boom 2", "bigboom2", "nuke2electricboogaloo"],
-    "9": ["uno", "unoreverse", "unoreversecard", "uno reverse", "uno reverse card"],
-    "10": ["vault"],
-    "11": ["lockpick", "pick"],
-    "12": ["rules", "rulebook", "rule"],
-    "13": ["tinfoil", "hat", "tinfoilhat"]
-}
-itemdescriptions = {
-    "1": "Some say it's gambling, so imma add it while it's legal...",
-    "2": "Give luck some help while gambling, one time use.",
-    "3": "Anyone here remember 'tako, dmspam'?",
-    "4": "Use this to steal some points from your buddies, i'm sure they won't hate you...",
-    "5": "Why would you keep this?",
-    "6": "Shows you your true fortune!",
-    "7": "Kim jong un wants to know your location. DISCOUNT 90%!!!111!!1!!1",
-    "8": "The cooler daniel",
-    "9": "Use this to ward off those pesky thieves once and for all",
-    "10": "Protect your precious points, stops one attack each, 3 allowed active at once",
-    "11": "Removes a vault, nothing else",
-    "12": "Removes an Uno Reverse Card, nothing else",
-    "13": "PLACEHOLDER"
-}
-lootboxmax = [
-    400,
-    3,
-    5,
-    1,
-    1,
-    10,
-    1,
-    1,
-    1,
-    1,
-    2
-]
-lootboxchances = [
-    2000,
-    1000,
-    2000,
-    400,
-    100,
-    1500,
-    200,
-    80,
-    40,
-    400,
-    1000
-]
-lootboxitems = [
-    0,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11
-]
-itemindex = {
-    "1": lootboxtemplate,
-    "2": loadeddice,
-    "3": spambot,
-    "4": robbersmask,
-    "5": moldybread,
-    "6": fortunecookie,
-    "7": nuke,
-    "8": nuke2,
-    "9": unoreverse,
-    "10": vault,
-    "11": lockpick,
-    "12": rulebook,
-    "13": tinfoilhat
-}
-shopcosts = {
-    "1": 500,
-    "2": 200,
-    "3": 100,
-    "4": 400,
-    "5": 20,
-    "6": 80,
-    "7": 100,
-    "8": 1000,
-    "9": 1200,
-    "10": 200,
-    "11": 300
-}
-sellcosts = {
-    "1": 250,
-    "2": 100,
-    "3": 15,
-    "4": 200,
-    "5": 5,
-    "6": 5,
-    "7": 50,
-    "8": 300,
-    "9": 800,
-    "10": 150,
-    "11": 150
-}
 effectemoji = {
     "dice": "<:dice:632295947552030741>",
     "uno": "<:unoreverse:699194687646597130>",
@@ -229,20 +54,31 @@ effectemoji = {
 
 #=================================== item defintions ===================================#
 
+index.add(
+    name="_coin",
+    lootboxmax=400,
+    lootboxweight=2000,
+    genaliases=False
+)
+
+
 async def item_lootbox(ctx):
     embed = discord.Embed(title="Loot Box opened!", description="You got:", colour=discord.Colour(0x70a231))
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
     for i in range(3):
         print(i)
-        addthis = random.choices(lootboxitems, lootboxchances)[0]
-        amount = random.randint(1, lootboxmax[lootboxitems.index(addthis)])
-        addthis = str(addthis)
-        if addthis == "0":
-            embed.add_field(name="<:coin:632592319245451286>", value=f"""{amount} Points""", inline=True)
+        weights = []
+        for item in index.items:
+            weights.append(item.lootboxweight)
+        addthis = random.choices(index.items, weights)[0]
+        amount = random.randint(1, addthis.lootboxmax)
+        #addthis = str(addthis)
+        if addthis.id == 0:
+            embed.add_field(name="<:coin:632592319245451286>", value=f"{amount} Points", inline=True)
             scores[str(ctx.author.id)]["score"] += amount
         else:
-            embed.add_field(name=itemindex[addthis]["emoji"], value=f"""{amount}x {itemindex[addthis]["displayname"]}""", inline=True)
-            await giveitem(ctx.author, itemindex[addthis], amount)
+            embed.add_field(name=addthis.emoji, value=f"{amount}x {addthis.name}", inline=True)
+            await giveitem(ctx.author, addthis.json(), amount)
     await ctx.send(embed=embed)
     return True
 
@@ -524,9 +360,6 @@ index.add(
 print("connecting...")
 
 
-#def check(reaction, user):
-#    return reaction.message.channel == client.get_channel(int(channelid)) and not user.id == client.user.id
-
 def check(payload):
     return payload.channel_id == int(channelid) and not payload.user_id == client.user.id
 
@@ -594,8 +427,6 @@ async def background():
             rawemoji = payload.emoji
             message = await channel.fetch_message(payload.message_id)
             await message.remove_reaction(rawemoji, member)
-            #ua = await client.wait_for("reaction_add", check=check)
-            #await ua[0].remove(ua[1])
             if emoji.demojize(str(rawemoji), use_aliases=True) in q["correct"]:
                 points = (10 - (2 * tries)) * triviamultiplier
                 embed=discord.Embed(description="🟢 {} has earned {} points!".format(member, points))
@@ -610,8 +441,9 @@ async def background():
                     scores[memberidstr] = {}
                     scores[memberidstr]["score"] = points
                 if random.randint(1, 10) == 1:
-                    await giveitem(member, lootboxtemplate, 1)
-                    await channel.send(f"{member.mention}: Wow, you found a loot box!")
+                    lootbox = index.get_by_id(1)
+                    await giveitem(member, lootbox.json(), 1)
+                    await channel.send(f"{member.mention}: Wow, you found a {str(lootbox)}!")
                 break
             else:
                 if tries < 4:
@@ -688,9 +520,10 @@ async def on_message(message):
             if scores[str(message.author.id)]["xp"] >= levelcost:
                 scores[str(message.author.id)]["xp"] = 0
                 scores[str(message.author.id)]["level"] += 1
+                lootbox = index.get_by_id(1)
                 await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{scores[str(message.author.id)]["level"]}`""")
-                await message.channel.send(f"{message.author.mention}: Wow, you found a loot box!")
-                await giveitem(message.author, lootboxtemplate, 1)
+                await message.channel.send(f"{message.author.mention}: Wow, you found a {str(lootbox)}!")
+                await giveitem(message.author, lootbox.json(), 1)
     await client.process_commands(message)
 
 @client.command(aliases=["bal", "money", "status"])
@@ -707,14 +540,6 @@ async def points(ctx, *args):
     if not member:
         await ctx.send("I don't know them")
         return
-
-    #effects = ""
-    #for k, i in scores[str(member.id)]["effects"].items():
-    #    effects += f"{i}x {k}, "
-    #if effects:
-    #    effects = effects[:2]
-    #else:
-    #    effects = "none"
 
     vaults = []
     if "vault" in scores[str(member.id)]["effects"]:
@@ -816,8 +641,9 @@ async def gimme(ctx, giv: int, user=None):
             return
     else:
         member = ctx.author
-    await giveitem(member, itemindex[str(giv)], 1)
-    await ctx.send(f"""{member.mention}: i got u one of them {itemindex[str(giv)]["displayname"]}, you filthy cheater""")
+    item = index.get_by_id(giv)
+    await giveitem(member, item.json(), 1)
+    await ctx.send(f"""{member.mention}: i got u one of them {str(item)}, you filthy cheater""")
 
 @client.command()
 @commands.is_owner()
@@ -852,12 +678,9 @@ async def createcounter(ctx, year: int, month: int, day: int, hour: int):
 @client.command(aliases=["info", "tellmemore"])
 async def iteminfo(ctx, *, item: str):
     """U wanna know what some of this shit does?"""
-    itemid = ""
-    for key, alis in itemaliases.items():
-        if item in alis:
-            itemid = key
-    if itemid:
-        await ctx.send(itemdescriptions[itemid])
+    itemobj = index.get_by_alias(item)
+    if itemobj:
+        await ctx.send(itemobj.description)
     else:
         await ctx.send("That item does not exist...")
 
@@ -868,7 +691,6 @@ async def iteminfo_error(ctx, error):
 @client.command(aliases=["open", "eat"])
 async def use(ctx, *args):
     """Do something with your random crap"""
-    #REQUIRE_TWO_ARGS = [3, 4, 7, 8, 11]
     authorid = ctx.author.id
     authoridstr = str(authorid)
 
@@ -876,10 +698,6 @@ async def use(ctx, *args):
         await ctx.send("Pls tell me item thx")
         return
 
-    # itemid = 0
-    # for k, i in itemaliases.items():
-    #     if args[0] in i:
-    #         itemid = int(k)
     item = index.get_by_alias(args[0])
     if not item:
         await ctx.send("Unknown item that")
@@ -912,29 +730,6 @@ async def use(ctx, *args):
             scores[authoridstr]["items"][has]["count"] -= 1
         else:
             del scores[authoridstr]["items"][has]
-
-    # if itemid == 1:
-    #     pass
-    # elif itemid == 2:
-    #     pass
-    # elif itemid == 3:
-    #     pass
-    # elif itemid == 4:
-    #     pass
-    # elif itemid == 5:
-    #     pass
-    # elif itemid == 6:
-    #     pass
-    # elif itemid == 7:
-    #     pass            
-    # elif itemid == 8:
-    #     pass
-    # elif itemid == 9:
-    #     pass
-    # elif itemid == 10:
-    #     pass
-    # elif itemid == 11:
-    #     pass
 
 @use.error
 async def use_error(ctx, error):
@@ -986,48 +781,33 @@ async def shop(ctx, buythis=None, amount=1):
     if not buythis:
         embed = discord.Embed(title="For sale:", colour=discord.Colour(0x70a231))
         embed.set_author(name="yo whattup come buy some stuffs", icon_url=client.user.avatar_url)
-        for item in shopcosts:
-            embed.add_field(name=f"""**{itemindex[item]["emoji"]} {itemindex[item]["displayname"]}** - {shopcosts[item]} Points""", value=itemdescriptions[item], inline=False)
+        for item in index.items:
+            if item.buy:
+                embed.add_field(name=f"**{str(item)}** - {item.buy} Points", value=item.description, inline=False)
         await ctx.send(embed=embed)
         return
 
-    buythisid = 0
-    for item in itemaliases:
-        if item in shopcosts and buythis in itemaliases[item]:
-            buythisid = int(item)
-            break
-    if not buythisid:
+    item = index.get_by_alias(buythis)
+    if not item:
         await ctx.send("I don't sell that")
         return
 
-    if scores[str(ctx.author.id)]["score"] >= shopcosts[str(buythisid)] * amount:
-        await ctx.send(f"""{ctx.author.mention}: you bought {amount} {itemindex[str(buythisid)]["emoji"]} {itemindex[str(buythisid)]["displayname"]}""")
-        scores[str(ctx.author.id)]["score"] -= shopcosts[str(buythisid)] * amount
-        await giveitem(ctx.author, itemindex[str(buythisid)], amount)
+    if scores[str(ctx.author.id)]["score"] >= item.buy * amount:
+        await ctx.send(f"{ctx.author.mention}: you bought {amount} {str(item)}")
+        scores[str(ctx.author.id)]["score"] -= item.buy * amount
+        await giveitem(ctx.author, item.json(), amount)
     else:
         await ctx.send("U ain't got da cash m8")
                 
 @client.command(aliases=["sellitem"])
 async def sell(ctx, sellthis, amount=1):
     """Yo whattup come buy some stuffs"""
-    # if not buythis:
-    #     embed = discord.Embed(title="For sale:", colour=discord.Colour(0x70a231))
-    #     embed.set_author(name="yo whattup come buy some stuffs", icon_url=client.user.avatar_url)
-    #     for item in shopcosts:
-    #         embed.add_field(name=f"""**{itemindex[item]["emoji"]} {itemindex[item]["displayname"]}** - {shopcosts[item]} Points""", value=itemdescriptions[item], inline=False)
-    #     await ctx.send(embed=embed)
-    #     return
-
-    itemid = 0
-    for item in itemaliases:
-        if item in sellcosts and sellthis in itemaliases[item]:
-            itemid = int(item)
-            break
-    if not itemid:
+    item = index.get_by_alias(sellthis)
+    if not item:
         await ctx.send("I don't buy that")
         return
 
-    has = await hasitem(ctx.author.id, itemid)
+    has = await hasitem(ctx.author.id, item)
     if isinstance(has, bool):
         await ctx.send("You dont own that shit man")
         return
@@ -1036,8 +816,8 @@ async def sell(ctx, sellthis, amount=1):
         await ctx.send("You dont have enough of that shit")
         return
 
-    await ctx.send(f"""{ctx.author.mention}: you sold {amount} {itemindex[str(itemid)]["emoji"]} {itemindex[str(itemid)]["displayname"]} for {sellcosts[str(itemid)] * amount} <:coin:632592319245451286>""")
-    scores[str(ctx.author.id)]["score"] += sellcosts[str(itemid)] * amount
+    await ctx.send(f"{ctx.author.mention}: you sold {amount} {str(item)} for {item.sell * amount} <:coin:632592319245451286>")
+    scores[str(ctx.author.id)]["score"] += item.sell * amount
     if scores[str(ctx.author.id)]["items"][has]["count"] > amount:
         scores[str(ctx.author.id)]["items"][has]["count"] -= amount
     else:
