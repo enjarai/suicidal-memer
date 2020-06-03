@@ -55,7 +55,8 @@ effectemoji = {
 #=================================== item defintions ===================================#
 
 index.add(
-    name="_coin",
+    name="Points",
+    emoji="<:coin:632592319245451286>",
     lootboxmax=400,
     lootboxweight=2000,
     genaliases=False
@@ -63,6 +64,11 @@ index.add(
 
 
 async def item_lootbox(ctx):
+    """
+    This is a loot box, in case you hadn't guessed.
+
+    Here are some drop rates i guess:
+    """
     embed = discord.Embed(title="Loot Box opened!", description="You got:", colour=discord.Colour(0x70a231))
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
     for i in range(3):
@@ -94,6 +100,12 @@ index.add(
 
 
 async def item_dice(ctx):
+    """
+    Using this before gambling increases your chance of winning to 66%.
+    (Don't use this at a real casino, cus i think thats illegal)
+
+    *\* this is janky will rework soon(tm)*
+    """
     scores[str(ctx.author.id)]["effects"]["dice"] = 1
     await ctx.send(ctx.author.mention + ": used item")
     return True
@@ -112,12 +124,22 @@ index.add(
 
 
 async def item_spambot(ctx, member):
+    """
+    You all know that feeling when your friends are online,
+    but they never respond to your messages.
+    This item is the solution to that problem!
+
+    Using this item on another user will spam the chat with their pings.
+    Now available for only $19.99! *terms and conditions apply*
+
+    *\* please dont abuse :)*
+    """
     for i in range(4):
         await ctx.send(member.mention + ": get the fuck over here")
     amount = random.randint(10, 30)
     await ctx.send(ctx.author.mention + f": {member.mention} was so startled they dropped {amount} <:coin:632592319245451286>")
     scores[str(member.id)]["score"] -= amount
-    scores[str(ctx.author.id)]["score"] += amount
+    scores[str(ctx.author.id)]["score"] += amount # add cooldown?
     return True
 
 index.add(
@@ -135,6 +157,13 @@ index.add(
 
 
 async def item_mask(ctx, member):
+    """
+    You filthy thief!
+    Stealing up to 300 points from your friends using this item is not nice.
+    I sure do hope they have vaults active to stop you...
+
+    *\* Elysium Corp is not responsible for any bans as the result of robbing admins*
+    """
     if scores[str(member.id)]["score"] >= 300:
         amount = random.randint(40, 300)
     elif scores[str(member.id)]["score"] < 50:
@@ -175,6 +204,15 @@ index.add(
 
 
 async def item_bread(ctx):
+    """
+    Okay seriously thats gross, its almost like a new lifeform has evolved here!
+    Wait you wanna eat this? Would you even survive that?!
+
+    Actually eating it seems to just remove 10 points.
+    But it doesn't stop you from eating it is you have no points left, that might be worth investigating...
+
+    *\* this might get really useful later on, once i get around to adding the thing*
+    """
     await ctx.send(ctx.author.mention + ": You ate the Moldy Bread, why the fuck would you do that? *backs away slowly*\nU got -10 <:coin:632592319245451286> cus thats just nasty")
     scores[str(ctx.author.id)]["score"] -= 10
     return True
@@ -193,6 +231,14 @@ index.add(
 
 
 async def item_fortune(ctx):
+    """
+    "A fortune cookie is a crisp and sugary cookie usually made from flour, sugar, vanilla, and sesame seed oil with a piece of paper inside, a "fortune", on which is an aphorism, or a vague prophecy."
+    *(from https://en.wikipedia.org/wiki/Fortune_cookie)*
+
+    Well Wikipedia isn't wrong, but there might be more to it than that...
+
+    *\* expect more here in the future*
+    """
     await ctx.send(ctx.author.mention + f""": You cracked open the cookie, the little piece of paper inside says:\n```{subprocess.check_output(["/usr/games/fortune"]).decode("utf-8")}```""")
     if random.randint(1, 10) == 1:
         cash = random.randint(5, 30)
@@ -215,6 +261,14 @@ index.add(
 
 
 async def item_nuke(ctx, member):
+    """
+    Pretty cool right, having a nuke in your pocket?
+    Using this is more effective than just putting on a mask, just like real life!
+
+    This is more effective at stealing points, but there's also some collateral damage.
+
+    *\* tbh, it is not that good, thats why it's on discount :/*
+    """
     if scores[str(member.id)]["score"] >= 500:
         amount = random.randint(0, 500)
     elif scores[str(member.id)]["score"] < 0:
@@ -251,6 +305,14 @@ index.add(
 
 
 async def item_nuke2(ctx, member):
+    """
+    Fuck your friends in the ass today with the new NUKE 2: ELECTRIC BOOGALOO,
+    as opposed to the old nuke this one is acually better than a mask! *wow*
+
+    This is exactly the same as the normal nuke, but more destructive.
+
+    *\* where the normal nuke destroyed one city, this one destroys about 5 at least*
+    """
     if scores[str(member.id)]["score"] >= 1000:
         amount = random.randint(400, 1000)
     elif scores[str(member.id)]["score"] < 0:
@@ -287,6 +349,15 @@ index.add(
 
 
 async def item_uno(ctx):
+    """
+    Okay so we're playing uno now apparently,
+    this acually seems pretty useful though.
+
+    The uno card can reverse a single rob or nuke.
+    After that it just disappears. like, \*poof\*, and its gone.
+
+    *\* this item is pretty good at keeping you safe, if you can afford it...*
+    """
     if "uno" in scores[str(ctx.author.id)]["effects"]:
         await ctx.send(ctx.author.mention + f""": You already an uno card active""")
         return False
@@ -309,6 +380,16 @@ index.add(
 
 
 async def item_vault(ctx):
+    """
+    This miraculous item seems to be able to stop an entire nuke!
+    It does also break from a simple robbery though...
+
+    Use a vault to protect your points from robberies and nukes.
+    After activating a vault it will protect your balance from a single attack!
+    You can have 3 vaults active at once, plus a single uno card.
+
+    *\* It's not as useful since the introduction of the lockpick...*
+    """
     if "vault" in scores[str(ctx.author.id)]["effects"]:
         if scores[str(ctx.author.id)]["effects"]["vault"] < 3:
             scores[str(ctx.author.id)]["effects"]["vault"] += 1
@@ -334,6 +415,14 @@ index.add(
 
 
 async def item_lockpick(ctx, member):
+    """
+    Wasting masks and nukes on removing vaults is not very nice is it?
+    
+    This item can remove a single active vault from someone's balance.
+    Once there are no vaults left it's pretty much useless...
+
+    *\* okay so i might have made this a bit too common...*
+    """
     if "vault" in scores[str(member.id)]["effects"]:
         await remeffect(member.id, "vault")
         await ctx.send(ctx.author.mention + f""": You cracked one of {member.mention}'s vaults!'""")
@@ -676,11 +765,23 @@ async def createcounter(ctx, year: int, month: int, day: int, hour: int):
         json.dump(counters, f, indent=4)
 
 @client.command(aliases=["info", "tellmemore"])
-async def iteminfo(ctx, *, item: str):
+async def iteminfo(ctx, *, item=""):
     """U wanna know what some of this shit does?"""
-    itemobj = index.get_by_alias(item)
-    if itemobj:
-        await ctx.send(itemobj.description)
+    if not item:
+        await ctx.send("What item do u wanna know about?")
+        return
+    item = index.get_by_alias(item)
+    if item and item.longdesc:
+        embed = discord.Embed(title=str(item), description=item.longdesc, colour=discord.Colour(0x70a231))
+        embed.set_author(name=client.user.name, icon_url=client.user.avatar_url)
+        if item.id == 1:
+            maxweight = 0
+            for iitem in index.items:
+                maxweight += iitem.lootboxweight
+            for iitem in index.items:
+                if iitem.lootboxweight:
+                    embed.add_field(name=str(iitem), value=f"Chance: {round(iitem.lootboxweight / maxweight * 100, 2)}%", inline=True)
+        await ctx.send(embed=embed)
     else:
         await ctx.send("That item does not exist...")
 

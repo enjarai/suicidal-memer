@@ -11,6 +11,7 @@ class Item(object):
         self.buy = buy
         self.sell = sell
         self.useargs = useargs
+        self.longdesc = use.__doc__
 
         if genaliases:
             lowername = name.lower()
