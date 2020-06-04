@@ -29,8 +29,7 @@ index = ItemIndex("main")
 
 #read "database"
 db = Database("userdata.db")
-# with open("scores.json", "r") as f:
-#     scores = json.load(f)
+
 #read counters
 with open("counters.json", "r") as f:
     counters = json.load(f)
@@ -462,45 +461,6 @@ print("connecting...")
 def check(payload):
     return payload.channel_id == int(channelid) and not payload.user_id == client.user.id
 
-# async def save():
-#     with open("scores.json", "w") as f:
-#         json.dump(scores, f, indent=4)
-
-# async def modscore(user, amount):
-#     scores[str(user.id)]["score"] += amount
-
-# async def equal_dicts(a, b, ignore_keys):
-#     ka = set(a).difference(ignore_keys)
-#     kb = set(b).difference(ignore_keys)
-#     return ka == kb and all(a[k] == b[k] for k in ka)
-
-# async def giveitem(user, item, amount):
-#     userid = str(user.id)
-#     add = False
-#     for ownitem in scores[userid]["items"]:
-#         if item["id"] == ownitem["id"]:
-#             ownitem["count"] += amount
-#             add = True
-#             break
-#     if not add:
-#         item["count"] = amount
-#         scores[userid]["items"].append(item)
-
-# async def hasitem(userid, item):
-#     found = False
-#     for iitem in scores[str(userid)]["items"]:
-#         if iitem["id"] == item.id:
-#             found = scores[str(userid)]["items"].index(iitem)
-#             break
-#     return found
-
-# async def remeffect(userid: str, effect):
-#     userid = str(userid)
-#     if scores[userid]["effects"][effect] > 1:
-#         scores[userid]["effects"][effect] -= 1
-#     else:
-#         del scores[userid]["effects"][effect]
-
 async def getmember(ctx, args):
     if len(args) == 1:
         if ctx.message.mentions:
@@ -543,15 +503,6 @@ async def background():
                 points = (10 - (2 * tries)) * triviamultiplier
                 embed=discord.Embed(description="🟢 {} has earned {} points!".format(member, points))
                 await channel.send(embed=embed)
-                # memberidstr = str(member.id)
-                # if memberidstr in scores:
-                #     if "score" in scores[memberidstr]:
-                #         scores[memberidstr]["score"] += points
-                #     else:
-                #         scores[memberidstr]["score"] = points
-                # else:
-                #     scores[memberidstr] = {}
-                #     scores[memberidstr]["score"] = points
                 db.update_bal(member.id, points)
                 if random.randint(1, 10) == 1:
                     lootbox = index.get_by_id(1)
@@ -581,13 +532,6 @@ async def background2():
                 text = "Completed!"
             await message.edit(content=text)
 
-# async def background3():
-#     await client.wait_until_ready()
-#     print("background3 active")
-#     while True:
-#         await asyncio.sleep(60)
-#         print("saving data...")
-#         await save()
 
 #WIP
 async def background4():
@@ -600,11 +544,6 @@ async def background4():
             print("Waiting {} seconds".format(slp))
             await asyncio.sleep(slp)
 
-# @client.event
-# async def on_disconnect():
-#     print("saving data for disconnect...")
-#     await save()
-
 @client.event
 async def on_message(message):
     if not message.author.id == client.user.id:
@@ -612,23 +551,6 @@ async def on_message(message):
             lastid[str(message.channel.id)] = 0
         if not message.author.id == lastid[str(message.channel.id)]:
             lastid[str(message.channel.id)] = message.author.id
-            # if not str(message.author.id) in scores:
-            #     scores[str(message.author.id)] = {}
-            # if not "xp" in scores[str(message.author.id)]:
-            #     scores[str(message.author.id)]["xp"] = 0
-            # if not "level" in scores[str(message.author.id)]:
-            #     scores[str(message.author.id)]["level"] = 1
-            # if not "items" in scores[str(message.author.id)]:
-            #     scores[str(message.author.id)]["items"] = [{
-            #     "displayname": "Loot Box",
-            #     "emoji": "<:lootbox:632286669592199217>",
-            #     "id": 1,
-            #     "count": 3
-            # }]
-            # if not "effects" in scores[str(message.author.id)]:
-            #     scores[str(message.author.id)]["effects"] = {}
-            # if not "score" in scores[str(message.author.id)]:
-            #     scores[str(message.author.id)]["score"] = 0
 
             db.setup_user(message.author.id) # move this to on_member_join event
             db.update("xp", message.author.id, 1)
@@ -667,22 +589,6 @@ async def points(ctx, *args):
     embed.set_author(name=member.name, icon_url=member.avatar_url)
     await ctx.send(embed=embed)
 
-# @client.command()
-# async def mclink(ctx, mcacc: str):
-#     """For the Minceraft server, enter your username and buy ingame items with your points (not microtransactions)"""
-#     if not str(ctx.author.id) in scores:
-#         scores[str(ctx.author.id)] = {}
-#     id = 0
-#     for key, value in scores.items():
-#         if "mcacc" in value and value["mcacc"].lower() == mcacc.lower():
-#             id = int(key)
-#             break
-#     if id:
-#         await ctx.send("That account is already linked, if this is really your Minecraft account please contact enjarai")
-#     else:
-#         scores[str(ctx.author.id)]["mcacc"] = mcacc
-#         await ctx.send("Database updated!")
-
 async def int_gamble(ctx, amount: int, odds):
     authbal = db.get_bal(ctx.author.id)
 
@@ -710,29 +616,8 @@ async def int_gamble(ctx, amount: int, odds):
 @client.command(aliases=["bet", "casino"])
 async def gamble(ctx, amount=None):
     """Come on, have a try. You have a 50% chance to double your bet"""
-    # if amount < 1:
-    #     await ctx.send("nice try")
-    #     return
-    # if str(ctx.author.id) in scores and "score" in scores[str(ctx.author.id)] and scores[str(ctx.author.id)]["score"] >= amount:
-    #     if "dice" in scores[str(ctx.author.id)]["effects"]:
-    #         await ctx.send("wow man! you have an active Loaded Dice, your chance of winning is 66% instead of 50%")
-    #         randbool = random.choice([True, True, False])
-    #         if scores[str(ctx.author.id)]["effects"]["dice"] > 1:
-    #             scores[str(ctx.author.id)]["effects"]["dice"] -= 1
-    #         else:
-    #             del scores[str(ctx.author.id)]["effects"]["dice"]
-    #     else:
-    #         randbool = random.choice([True, False])
-    #     if randbool:
-    #         scores[str(ctx.author.id)]["score"] += amount
-    #         await ctx.send("You won! Your bet was doubled!\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
-    #     else:
-    #         scores[str(ctx.author.id)]["score"] -= amount
-    #         await ctx.send("You lost! This is so sad...\nNew balance: `{}`".format(scores[str(ctx.author.id)]["score"]))
-    # else:
-    #     await ctx.send("You can't gamble what you don't have")
     if not amount:
-        await ctx.send("How much to gamble?") # change this later
+        await ctx.send("How much to gamble?")
         return
     try:
         amount = int(amount)
@@ -851,8 +736,6 @@ async def use(ctx, *args):
         await ctx.send("Unknown item that")
         return
 
-    # has = await hasitem(authorid, item)
-    # if isinstance(has, bool):
     if not db.has_item(authorid, item.id):
         await ctx.send("You dont own that shit man")
         return
@@ -959,24 +842,12 @@ async def sell(ctx, sellthis, amount=1):
         await ctx.send("I don't buy that")
         return
 
-    # has = await hasitem(ctx.author.id, item)
-    # if isinstance(has, bool):
-    #     await ctx.send("You dont own that shit man")
-    #     return
     if not db.has_item(ctx.author.id, item.id, amount):
         await ctx.send("You dont own that shit man")
         return
 
-    # if not scores[str(ctx.author.id)]["items"][has]["count"] >= amount:
-    #     await ctx.send("You dont have enough of that shit")
-    #     return
-
     await ctx.send(f"{ctx.author.mention}: you sold {amount} {str(item)} for {item.sell * amount} <:coin:632592319245451286>")
     db.update_bal(ctx.author.id, item.sell * amount)
-    # if scores[str(ctx.author.id)]["items"][has]["count"] > amount:
-    #     scores[str(ctx.author.id)]["items"][has]["count"] -= amount
-    # else:
-    #     del scores[str(ctx.author.id)]["items"][has]
     db.rem_item(ctx.author.id, item.id, amount)
 
 @client.command()
@@ -991,5 +862,4 @@ async def helpiminfuckingdebt(ctx):
 if channelid:
     bgtask = client.loop.create_task(background())
 bgtask2 = client.loop.create_task(background2())
-# bgtask3 = client.loop.create_task(background3())
 client.run(token)

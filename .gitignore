@@ -121,3 +121,4 @@ scores.json
 temp.py
 temp2.py
 *.db
+*.test
