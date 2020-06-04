@@ -15,6 +15,7 @@ client.remove_command("help")
 
 # custom imports
 from itemindex import Item, ItemIndex
+from database import Database
 
 lastid = {}
 
@@ -27,8 +28,9 @@ triviamaxwait = int(config.get("config", "triviamaxwait"))
 index = ItemIndex("main")
 
 #read "database"
-with open("scores.json", "r") as f:
-    scores = json.load(f)
+db = Database("userdata.db")
+# with open("scores.json", "r") as f:
+#     scores = json.load(f)
 #read counters
 with open("counters.json", "r") as f:
     counters = json.load(f)
@@ -79,13 +81,12 @@ async def item_lootbox(ctx):
             weights.append(item.lootboxweight)
         addthis = random.choices(index.items, weights)[0]
         amount = random.randint(1, addthis.lootboxmax)
-        #addthis = str(addthis)
         if addthis.id == 0:
             embed.add_field(name="<:coin:632592319245451286>", value=f"{amount} Points", inline=True)
-            scores[str(ctx.author.id)]["score"] += amount
+            db.update_bal(ctx.author.id, amount)
         else:
             embed.add_field(name=addthis.emoji, value=f"{amount}x {addthis.name}", inline=True)
-            await giveitem(ctx.author, addthis.json(), amount)
+            db.give_item(ctx.author.id, addthis.id, amount)
     await ctx.send(embed=embed)
     return True
 
@@ -140,8 +141,8 @@ async def item_spambot(ctx, member):
         await ctx.send(member.mention + ": get the fuck over here")
     amount = random.randint(10, 30)
     await ctx.send(ctx.author.mention + f": {member.mention} was so startled they dropped {amount} <:coin:632592319245451286>")
-    scores[str(member.id)]["score"] -= amount
-    scores[str(ctx.author.id)]["score"] += amount # add cooldown?
+    db.update_bal(member.id, -amount)
+    db.update_bal(ctx.author.id, amount) # add cooldown?
     return True
 
 index.add(
@@ -166,25 +167,27 @@ async def item_mask(ctx, member):
 
     *\* Elysium Corp is not responsible for any bans as the result of robbing admins*
     """
-    if scores[str(member.id)]["score"] >= 300:
+    memscore = db.get_bal(member.id)
+    if memscore >= 300:
         amount = random.randint(40, 300)
-    elif scores[str(member.id)]["score"] < 50:
+    elif memscore < 50:
         amount = 0
     else:
-        amount = random.randint(40, scores[str(member.id)]["score"])
+        amount = random.randint(40, memscore)
     if amount:
-        if "uno" in scores[str(member.id)]["effects"]:
-            amount = int(amount / 2)
-            scores[str(member.id)]["score"] += amount
-            scores[str(ctx.author.id)]["score"] -= amount
+        memeff = db.get_eff(member.id)
+        if "uno" in memeff:
+            # amount = int(amount / 2)
+            db.update_bal(member.id, amount)
+            db.update_bal(ctx.author.id, -amount)
             await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had an uno reverse card active! you lost `{amount}` points!")
-            await remeffect(member.id, "uno")
-        elif "vault" in scores[str(member.id)]["effects"]:
+            db.rem_eff(member.id, "uno")
+        elif "vault" in memeff:
             await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had a vault active and you lost your mask!")
-            await remeffect(member.id, "vault")
+            db.rem_eff(member.id, "vault")
         else:
-            scores[str(member.id)]["score"] -= amount
-            scores[str(ctx.author.id)]["score"] += amount
+            db.update_bal(member.id, -amount)
+            db.update_bal(ctx.author.id, amount)
             await ctx.send(ctx.author.mention + f": You robbed {member.mention}, you managed to get away with `{amount}` points!")
     else:
         await ctx.send(ctx.author.mention + f": You cant rob {member.mention}! They're way too poor, thats pathetic... *shakes head disapprovingly*")
@@ -216,7 +219,7 @@ async def item_bread(ctx):
     *\* this might get really useful later on, once i get around to adding the thing*
     """
     await ctx.send(ctx.author.mention + ": You ate the Moldy Bread, why the fuck would you do that? *backs away slowly*\nU got -10 <:coin:632592319245451286> cus thats just nasty")
-    scores[str(ctx.author.id)]["score"] -= 10
+    db.update_bal(ctx.author.id, -10)
     return True
 
 index.add(
@@ -245,7 +248,7 @@ async def item_fortune(ctx):
     if random.randint(1, 10) == 1:
         cash = random.randint(5, 30)
         await ctx.send(ctx.author.mention + f""": There were also {cash} <:coin:632592319245451286> hidden inside!""")
-        scores[str(ctx.author.id)]["score"] += cash
+        db.update_bal(ctx.author.id, cash)
         # add item drops rarely, better than lootbox?
     return True
 
@@ -271,24 +274,26 @@ async def item_nuke(ctx, member):
 
     *\* tbh, it is not that good, thats why it's on discount :/*
     """
-    if scores[str(member.id)]["score"] >= 500:
+    memscore = db.get_bal(member.id)
+    if memscore >= 500:
         amount = random.randint(0, 500)
-    elif scores[str(member.id)]["score"] < 0:
-        amount = random.randint(0, scores[str(member.id)]["score"] * -1) * -1
-    elif scores[str(member.id)]["score"] < 500:
-        amount = random.randint(0, scores[str(member.id)]["score"])
-    if "uno" in scores[str(member.id)]["effects"]:
-        amount = int(amount / 2)
-        scores[str(member.id)]["score"] += int(amount / 2)
-        scores[str(ctx.author.id)]["score"] -= amount
+    elif memscore < 0:
+        amount = -random.randint(0, -memscore)
+    elif memscore < 500:
+        amount = random.randint(0, memscore)
+    memeff = db.get_eff(member.id)
+    if "uno" in memeff:
+        # amount = int(amount / 2)
+        db.update_bal(member.id, int(amount / 2))
+        db.update_bal(ctx.author.id, -amount)
         await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
-        await remeffect(member.id, "uno")
-    elif "vault" in scores[str(member.id)]["effects"]:
+        db.rem_eff(member.id, "uno")
+    elif "vault" in memeff:
         await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
-        await remeffect(member.id, "vault")
+        db.rem_eff(member.id, "vault")
     else:
-        scores[str(member.id)]["score"] -= amount
-        scores[str(ctx.author.id)]["score"] += int(amount / 2)
+        db.update_bal(member.id, -amount)
+        db.update_bal(ctx.author.id, int(amount / 2))
         await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
     return True
 
@@ -315,24 +320,26 @@ async def item_nuke2(ctx, member):
 
     *\* where the normal nuke destroyed one city, this one destroys about 5 at least*
     """
-    if scores[str(member.id)]["score"] >= 1000:
-        amount = random.randint(400, 1000)
-    elif scores[str(member.id)]["score"] < 0:
-        amount = random.randint(0, scores[str(member.id)]["score"] * -1)
-    elif scores[str(member.id)]["score"] < 1000:
-        amount = random.randint(int(scores[str(member.id)]["score"] * 0.4), scores[str(member.id)]["score"])
-    if "uno" in scores[str(member.id)]["effects"]:
-        amount = int(amount / 2)
-        scores[str(member.id)]["score"] += int(amount / 2)
-        scores[str(ctx.author.id)]["score"] -= amount
+    memscore = db.get_bal(member.id)
+    if memscore >= 1000:
+        amount = random.randint(0, 1000)
+    elif memscore < 0:
+        amount = -random.randint(0, -memscore)
+    elif memscore < 1000:
+        amount = random.randint(int(memscore * 0.4), memscore)
+    memeff = db.get_eff(member.id)
+    if "uno" in memeff:
+        # amount = int(amount / 2)
+        db.update_bal(member.id, int(amount / 2))
+        db.update_bal(ctx.author.id, -amount)
         await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
-        await remeffect(member.id, "uno")
-    elif "vault" in scores[str(member.id)]["effects"]:
-        await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had a vault active!")
-        await remeffect(member.id, "vault")
+        db.rem_eff(member.id, "uno")
+    elif "vault" in memeff:
+        await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, but they had a vault active!")
+        db.rem_eff(member.id, "vault")
     else:
-        scores[str(member.id)]["score"] -= amount
-        scores[str(ctx.author.id)]["score"] += int(amount / 2)
+        db.update_bal(member.id, -amount)
+        db.update_bal(ctx.author.id, int(amount / 2))
         await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
     return True
 
@@ -360,12 +367,12 @@ async def item_uno(ctx):
 
     *\* this item is pretty good at keeping you safe, if you can afford it...*
     """
-    if "uno" in scores[str(ctx.author.id)]["effects"]:
+    if "uno" in db.get_eff(ctx.author.id):
         await ctx.send(ctx.author.mention + f""": You already an uno card active""")
         return False
     else:
         await ctx.send(ctx.author.mention + f""": Uno Reverse Card activate! you are now protected from one rob/nuke""")
-        scores[str(ctx.author.id)]["effects"]["uno"] = 1
+        db.give_eff(ctx.author.id, "uno")
     return True
 
 index.add(
@@ -392,14 +399,15 @@ async def item_vault(ctx):
 
     *\* It's not as useful since the introduction of the lockpick...*
     """
-    if "vault" in scores[str(ctx.author.id)]["effects"]:
-        if scores[str(ctx.author.id)]["effects"]["vault"] < 3:
-            scores[str(ctx.author.id)]["effects"]["vault"] += 1
+    autheff = db.get_eff(ctx.author.id)
+    if "vault" in autheff:
+        if autheff["vault"] < 3:
+            db.give_eff(ctx.author.id, "vault")
         else:
             await ctx.send(ctx.author.mention + f""": You already have 3 vaults active""")
             return False
     else:
-        scores[str(ctx.author.id)]["effects"]["vault"] = 1
+        db.give_eff(ctx.author.id, "vault")
     await ctx.send(ctx.author.mention + f""": Used item""")
     return True
 
@@ -425,8 +433,8 @@ async def item_lockpick(ctx, member):
 
     *\* okay so i might have made this a bit too common...*
     """
-    if "vault" in scores[str(member.id)]["effects"]:
-        await remeffect(member.id, "vault")
+    if "vault" in db.get_eff(member.id):
+        db.rem_eff(member.id, "vault")
         await ctx.send(ctx.author.mention + f""": You cracked one of {member.mention}'s vaults!'""")
     else:
         await ctx.send(ctx.author.mention + f""": {member.mention} has no vaults active""")
@@ -454,44 +462,57 @@ print("connecting...")
 def check(payload):
     return payload.channel_id == int(channelid) and not payload.user_id == client.user.id
 
-async def save():
-    with open("scores.json", "w") as f:
-        json.dump(scores, f, indent=4)
+# async def save():
+#     with open("scores.json", "w") as f:
+#         json.dump(scores, f, indent=4)
 
-async def modscore(user, amount):
-    scores[str(user.id)]["score"] += amount
+# async def modscore(user, amount):
+#     scores[str(user.id)]["score"] += amount
 
-async def equal_dicts(a, b, ignore_keys):
-    ka = set(a).difference(ignore_keys)
-    kb = set(b).difference(ignore_keys)
-    return ka == kb and all(a[k] == b[k] for k in ka)
+# async def equal_dicts(a, b, ignore_keys):
+#     ka = set(a).difference(ignore_keys)
+#     kb = set(b).difference(ignore_keys)
+#     return ka == kb and all(a[k] == b[k] for k in ka)
 
-async def giveitem(user, item, amount):
-    userid = str(user.id)
-    add = False
-    for ownitem in scores[userid]["items"]:
-        if item["id"] == ownitem["id"]:
-            ownitem["count"] += amount
-            add = True
-            break
-    if not add:
-        item["count"] = amount
-        scores[userid]["items"].append(item)
+# async def giveitem(user, item, amount):
+#     userid = str(user.id)
+#     add = False
+#     for ownitem in scores[userid]["items"]:
+#         if item["id"] == ownitem["id"]:
+#             ownitem["count"] += amount
+#             add = True
+#             break
+#     if not add:
+#         item["count"] = amount
+#         scores[userid]["items"].append(item)
 
-async def hasitem(userid, item):
-    found = False
-    for iitem in scores[str(userid)]["items"]:
-        if iitem["id"] == item.id:
-            found = scores[str(userid)]["items"].index(iitem)
-            break
-    return found
+# async def hasitem(userid, item):
+#     found = False
+#     for iitem in scores[str(userid)]["items"]:
+#         if iitem["id"] == item.id:
+#             found = scores[str(userid)]["items"].index(iitem)
+#             break
+#     return found
 
-async def remeffect(userid: str, effect):
-    userid = str(userid)
-    if scores[userid]["effects"][effect] > 1:
-        scores[userid]["effects"][effect] -= 1
-    else:
-        del scores[userid]["effects"][effect]
+# async def remeffect(userid: str, effect):
+#     userid = str(userid)
+#     if scores[userid]["effects"][effect] > 1:
+#         scores[userid]["effects"][effect] -= 1
+#     else:
+#         del scores[userid]["effects"][effect]
+
+async def getmember(ctx, args):
+    if len(args) == 1:
+        if ctx.message.mentions:
+            member = ctx.message.mentions[0]
+        else:
+            member = ctx.guild.get_member_named(args[0])
+        if member:
+            return member
+   
+    member = ctx.author
+
+    return member
 
 async def background():
     await client.wait_until_ready()
@@ -522,18 +543,19 @@ async def background():
                 points = (10 - (2 * tries)) * triviamultiplier
                 embed=discord.Embed(description="🟢 {} has earned {} points!".format(member, points))
                 await channel.send(embed=embed)
-                memberidstr = str(member.id)
-                if memberidstr in scores:
-                    if "score" in scores[memberidstr]:
-                        scores[memberidstr]["score"] += points
-                    else:
-                        scores[memberidstr]["score"] = points
-                else:
-                    scores[memberidstr] = {}
-                    scores[memberidstr]["score"] = points
+                # memberidstr = str(member.id)
+                # if memberidstr in scores:
+                #     if "score" in scores[memberidstr]:
+                #         scores[memberidstr]["score"] += points
+                #     else:
+                #         scores[memberidstr]["score"] = points
+                # else:
+                #     scores[memberidstr] = {}
+                #     scores[memberidstr]["score"] = points
+                db.update_bal(member.id, points)
                 if random.randint(1, 10) == 1:
                     lootbox = index.get_by_id(1)
-                    await giveitem(member, lootbox.json(), 1)
+                    db.give_item(member.id, lootbox.id, 1)
                     await channel.send(f"{member.mention}: Wow, you found a {str(lootbox)}!")
                 break
             else:
@@ -559,13 +581,13 @@ async def background2():
                 text = "Completed!"
             await message.edit(content=text)
 
-async def background3():
-    await client.wait_until_ready()
-    print("background3 active")
-    while True:
-        await asyncio.sleep(60)
-        print("saving data...")
-        await save()
+# async def background3():
+#     await client.wait_until_ready()
+#     print("background3 active")
+#     while True:
+#         await asyncio.sleep(60)
+#         print("saving data...")
+#         await save()
 
 #WIP
 async def background4():
@@ -578,10 +600,10 @@ async def background4():
             print("Waiting {} seconds".format(slp))
             await asyncio.sleep(slp)
 
-@client.event
-async def on_disconnect():
-    print("saving data for disconnect...")
-    await save()
+# @client.event
+# async def on_disconnect():
+#     print("saving data for disconnect...")
+#     await save()
 
 @client.event
 async def on_message(message):
@@ -590,51 +612,44 @@ async def on_message(message):
             lastid[str(message.channel.id)] = 0
         if not message.author.id == lastid[str(message.channel.id)]:
             lastid[str(message.channel.id)] = message.author.id
-            if not str(message.author.id) in scores:
-                scores[str(message.author.id)] = {}
-            if not "xp" in scores[str(message.author.id)]:
-                scores[str(message.author.id)]["xp"] = 0
-            if not "level" in scores[str(message.author.id)]:
-                scores[str(message.author.id)]["level"] = 1
-            if not "items" in scores[str(message.author.id)]:
-                scores[str(message.author.id)]["items"] = [{
-                "displayname": "Loot Box",
-                "emoji": "<:lootbox:632286669592199217>",
-                "id": 1,
-                "count": 3
-            }]
-            if not "effects" in scores[str(message.author.id)]:
-                scores[str(message.author.id)]["effects"] = {}
-            if not "score" in scores[str(message.author.id)]:
-                scores[str(message.author.id)]["score"] = 0
-            scores[str(message.author.id)]["xp"] += 1
-            if scores[str(message.author.id)]["xp"] >= levelcost:
-                scores[str(message.author.id)]["xp"] = 0
-                scores[str(message.author.id)]["level"] += 1
+            # if not str(message.author.id) in scores:
+            #     scores[str(message.author.id)] = {}
+            # if not "xp" in scores[str(message.author.id)]:
+            #     scores[str(message.author.id)]["xp"] = 0
+            # if not "level" in scores[str(message.author.id)]:
+            #     scores[str(message.author.id)]["level"] = 1
+            # if not "items" in scores[str(message.author.id)]:
+            #     scores[str(message.author.id)]["items"] = [{
+            #     "displayname": "Loot Box",
+            #     "emoji": "<:lootbox:632286669592199217>",
+            #     "id": 1,
+            #     "count": 3
+            # }]
+            # if not "effects" in scores[str(message.author.id)]:
+            #     scores[str(message.author.id)]["effects"] = {}
+            # if not "score" in scores[str(message.author.id)]:
+            #     scores[str(message.author.id)]["score"] = 0
+
+            db.setup_user(message.author.id) # move this to on_member_join event
+            db.update("xp", message.author.id, 1)
+            if db.get("xp", message.author.id) >= levelcost:
+                db.update("xp", message.author.id, -levelcost)
+                db.update("level", message.author.id, 1)
                 lootbox = index.get_by_id(1)
-                await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{scores[str(message.author.id)]["level"]}`""")
+                await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{db.get("level", message.author.id)}`""")
                 await message.channel.send(f"{message.author.mention}: Wow, you found a {str(lootbox)}!")
-                await giveitem(message.author, lootbox.json(), 1)
+                db.give_item(message.author.id, lootbox.id, 1)
     await client.process_commands(message)
 
 @client.command(aliases=["bal", "money", "status"])
 async def points(ctx, *args):
     """CAPITALISM BOYS"""
-    if len(args) == 1:
-        if ctx.message.mentions:
-            member = ctx.message.mentions[0]
-        else:
-            member = ctx.guild.get_member_named(args[0])
-    else:
-        member = ctx.author
+    member = await getmember(ctx, args)
 
-    if not member:
-        await ctx.send("I don't know them")
-        return
-
+    memeff = db.get_eff(member.id)
     vaults = []
-    if "vault" in scores[str(member.id)]["effects"]:
-        vaultsnum = scores[str(member.id)]["effects"]["vault"]
+    if "vault" in memeff:
+        vaultsnum = memeff["vault"]
     else:
         vaultsnum = 0
 
@@ -644,49 +659,51 @@ async def points(ctx, *args):
     for i in range(3 - vaultsnum):
         print(i)
         vaults.append("⭕")
-    if "uno" in scores[str(member.id)]["effects"]:
+    if "uno" in memeff:
         vaults.append("(<:unoreverse:699194687646597130>)")
     vaults = " ".join(vaults)
 
-    embed = discord.Embed(title="Status:", description=f"{scores[str(member.id)]['score']} <:coin:632592319245451286>\n**Active vaults:**\n{vaults}", colour=discord.Colour(0x70a231))
+    embed = discord.Embed(title="Status:", description=f"{db.get_bal(member.id)} <:coin:632592319245451286>\n**Active vaults:**\n{vaults}", colour=discord.Colour(0x70a231))
     embed.set_author(name=member.name, icon_url=member.avatar_url)
     await ctx.send(embed=embed)
 
-@client.command()
-async def mclink(ctx, mcacc: str):
-    """For the Minceraft server, enter your username and buy ingame items with your points (not microtransactions)"""
-    if not str(ctx.author.id) in scores:
-        scores[str(ctx.author.id)] = {}
-    id = 0
-    for key, value in scores.items():
-        if "mcacc" in value and value["mcacc"].lower() == mcacc.lower():
-            id = int(key)
-            break
-    if id:
-        await ctx.send("That account is already linked, if this is really your Minecraft account please contact enjarai")
-    else:
-        scores[str(ctx.author.id)]["mcacc"] = mcacc
-        await ctx.send("Database updated!")
+# @client.command()
+# async def mclink(ctx, mcacc: str):
+#     """For the Minceraft server, enter your username and buy ingame items with your points (not microtransactions)"""
+#     if not str(ctx.author.id) in scores:
+#         scores[str(ctx.author.id)] = {}
+#     id = 0
+#     for key, value in scores.items():
+#         if "mcacc" in value and value["mcacc"].lower() == mcacc.lower():
+#             id = int(key)
+#             break
+#     if id:
+#         await ctx.send("That account is already linked, if this is really your Minecraft account please contact enjarai")
+#     else:
+#         scores[str(ctx.author.id)]["mcacc"] = mcacc
+#         await ctx.send("Database updated!")
 
 async def int_gamble(ctx, amount: int, odds):
+    authbal = db.get_bal(ctx.author.id)
+
     if amount == 0:
         await ctx.send("Thats not gonna work m8")
         return False
     elif amount > 0:
-        if scores[str(ctx.author.id)]["score"] < amount:
+        if authbal < amount:
             await ctx.send("You can't gamble what you don't have")
             return False
     else:
-        if scores[str(ctx.author.id)]["score"] > amount:
+        if authbal > amount:
             await ctx.send("You can't gamble what you don't have")
             return False
 
     if random.choices([True, False], odds)[0]:
-        scores[str(ctx.author.id)]["score"] += amount
-        await ctx.send("Odds: {}%\nYou won! Your bet was doubled!\nNew balance: `{}`".format(odds[0], scores[str(ctx.author.id)]["score"]))
+        db.update_bal(ctx.author.id, amount)
+        await ctx.send("Odds: {}%\nYou won! Your bet was doubled!\nNew balance: `{}`".format(odds[0], db.get_bal(ctx.author.id)))
     else:
-        scores[str(ctx.author.id)]["score"] -= amount
-        await ctx.send("Odds: {}%\nYou lost! This is so sad...\nNew balance: `{}`".format(odds[0], scores[str(ctx.author.id)]["score"]))
+        db.update_bal(ctx.author.id, -amount)
+        await ctx.send("Odds: {}%\nYou lost! This is so sad...\nNew balance: `{}`".format(odds[0], db.get_bal(ctx.author.id)))
 
     return True
 
@@ -735,23 +752,17 @@ async def gamble_error(ctx, error):
 @client.command(aliases=["inv", "items"])
 async def inventory(ctx, *args):
     """SHOW ME WHAT YOU GOT"""
-    if len(args) == 1:
-        if ctx.message.mentions:
-            member = ctx.message.mentions[0]
-        else:
-            member = ctx.guild.get_member_named(args[0])
-        if not member:
-            await ctx.send("I don't know them")
-            return
-    else:
-        member = ctx.author
+    member = await getmember(ctx, args)
+
     embed = discord.Embed(title="Inventory:", colour=discord.Colour(0x70a231))
     embed.set_author(name=member.name, icon_url=member.avatar_url)
-    if scores[str(member.id)]["items"] == []:
+    inv = db.get_inv(member.id)
+    if inv == []:
         embed.title = "Inventory empty..."
     else:
-        for item in scores[str(member.id)]["items"]:
-            embed.add_field(name=item["emoji"], value=f"""{item["count"]}x {item["displayname"]}""", inline=True)
+        for item in inv:
+            itemobj = index.get_by_id(item[0])
+            embed.add_field(name=itemobj.emoji, value=f"""{item[1]}x {itemobj.name}""", inline=True)
     await ctx.send(embed=embed)    
 
 @client.command()
@@ -768,7 +779,7 @@ async def gimme(ctx, giv: int, user=None):
     else:
         member = ctx.author
     item = index.get_by_id(giv)
-    await giveitem(member, item.json(), 1)
+    db.give_item(member.id, item.id, 1)
     await ctx.send(f"""{member.mention}: i got u one of them {str(item)}, you filthy cheater""")
 
 @client.command()
@@ -784,7 +795,7 @@ async def gimmecash(ctx, giv: int, user=None):
             return
     else:
         member = ctx.author
-    scores[str(member.id)]["score"] += giv
+    db.update_bal(member.id, giv)
     await ctx.send(f"""{member.mention}: i got u some of them cash, you filthy cheater""")
 
 @client.command()
@@ -830,7 +841,6 @@ async def iteminfo_error(ctx, error):
 async def use(ctx, *args):
     """Do something with your random crap"""
     authorid = ctx.author.id
-    authoridstr = str(authorid)
 
     if not args:
         await ctx.send("Pls tell me item thx")
@@ -841,8 +851,9 @@ async def use(ctx, *args):
         await ctx.send("Unknown item that")
         return
 
-    has = await hasitem(authorid, item)
-    if isinstance(has, bool):
+    # has = await hasitem(authorid, item)
+    # if isinstance(has, bool):
+    if not db.has_item(authorid, item.id):
         await ctx.send("You dont own that shit man")
         return
 
@@ -875,10 +886,7 @@ async def use(ctx, *args):
         rmitem = await item.use(ctx)
 
     if rmitem:
-        if scores[authoridstr]["items"][has]["count"] > 1:
-            scores[authoridstr]["items"][has]["count"] -= 1
-        else:
-            del scores[authoridstr]["items"][has]
+        db.rem_item(authorid, item.id)
 
 @use.error
 async def use_error(ctx, error):
@@ -887,24 +895,22 @@ async def use_error(ctx, error):
 @client.command(aliases=["xp"])
 async def level(ctx, *args):
     """Is this an mmorpg or somethin?"""
-    if len(args) == 1:
-        if ctx.message.mentions:
-            member = ctx.message.mentions[0]
-        else:
-            member = ctx.guild.get_member_named(args[0])
-        if member:
-            await ctx.send(f"""{member.mention}: Is level `{scores[str(member.id)]["level"]}` & theyr `{scores[str(member.id)]["xp"]}/{levelcost}` to the next level""")
-        else:
-            await ctx.send("I don't know them")
+    member = await getmember(ctx, args)
+
+    level = db.get("level", member.id)
+    xp = db.get("xp", member.id)
+        
+    if member == ctx.author:
+        await ctx.send(f"""{member.mention}: Yeah boi, u r level `{level}` & ur `{xp}/{levelcost}` to the next level""")
     else:
-        await ctx.send(f"""{ctx.author.mention}: Yeah boi, u r level `{scores[str(ctx.author.id)]["level"]}` & ur `{scores[str(ctx.author.id)]["xp"]}/{levelcost}` to the next level""")
+        await ctx.send(f"""{member.mention}: Is level `{level}` & theyr `{xp}/{levelcost}` to the next level""")
 
 @client.command(aliases=["richest", "leaderboard"])
 async def baltop(ctx):
     """See who to rob"""
     top = []
-    for userid in scores:
-        top.append((userid, scores[userid]["score"]))
+    for userid in db.all_users():
+        top.append((userid, db.get_bal(userid)))
     top = sorted(top, key=operator.itemgetter(1))[::-1]
     embed = discord.Embed(title="Top 10 points:", description="━━━━━━━━━━━━━━━", colour=discord.Colour(0x70a231))
     amount = 0
@@ -938,10 +944,10 @@ async def shop(ctx, buythis=None, amount=1):
         await ctx.send("I don't sell that")
         return
 
-    if scores[str(ctx.author.id)]["score"] >= item.buy * amount:
+    if db.get_bal(ctx.author.id) >= item.buy * amount:
         await ctx.send(f"{ctx.author.mention}: you bought {amount} {str(item)}")
-        scores[str(ctx.author.id)]["score"] -= item.buy * amount
-        await giveitem(ctx.author, item.json(), amount)
+        db.update_bal(ctx.author.id, -(item.buy * amount))
+        db.give_item(ctx.author.id, item.id, amount)
     else:
         await ctx.send("U ain't got da cash m8")
                 
@@ -953,32 +959,37 @@ async def sell(ctx, sellthis, amount=1):
         await ctx.send("I don't buy that")
         return
 
-    has = await hasitem(ctx.author.id, item)
-    if isinstance(has, bool):
+    # has = await hasitem(ctx.author.id, item)
+    # if isinstance(has, bool):
+    #     await ctx.send("You dont own that shit man")
+    #     return
+    if not db.has_item(ctx.author.id, item.id, amount):
         await ctx.send("You dont own that shit man")
         return
 
-    if not scores[str(ctx.author.id)]["items"][has]["count"] >= amount:
-        await ctx.send("You dont have enough of that shit")
-        return
+    # if not scores[str(ctx.author.id)]["items"][has]["count"] >= amount:
+    #     await ctx.send("You dont have enough of that shit")
+    #     return
 
     await ctx.send(f"{ctx.author.mention}: you sold {amount} {str(item)} for {item.sell * amount} <:coin:632592319245451286>")
-    scores[str(ctx.author.id)]["score"] += item.sell * amount
-    if scores[str(ctx.author.id)]["items"][has]["count"] > amount:
-        scores[str(ctx.author.id)]["items"][has]["count"] -= amount
-    else:
-        del scores[str(ctx.author.id)]["items"][has]
+    db.update_bal(ctx.author.id, item.sell * amount)
+    # if scores[str(ctx.author.id)]["items"][has]["count"] > amount:
+    #     scores[str(ctx.author.id)]["items"][has]["count"] -= amount
+    # else:
+    #     del scores[str(ctx.author.id)]["items"][has]
+    db.rem_item(ctx.author.id, item.id, amount)
 
 @client.command()
 async def helpiminfuckingdebt(ctx):
-    if scores[str(ctx.author.id)]["score"] < 0:
+    bal = db.get_bal(ctx.author.id)
+    if bal < 0:
         await ctx.send("ur in some deep shit my dude, lemme help u out")
-        scores[str(ctx.author.id)]["score"] = 0
+        db.update_bal(ctx.author.id, -bal)
     else:
         await ctx.send("no ur not")
 
 if channelid:
     bgtask = client.loop.create_task(background())
 bgtask2 = client.loop.create_task(background2())
-bgtask3 = client.loop.create_task(background3())
+# bgtask3 = client.loop.create_task(background3())
 client.run(token)

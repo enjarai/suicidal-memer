@@ -31,6 +31,11 @@ class Database(object):
 
         self.connector.commit()
 
+    def all_users(self):
+        c = self.connector.execute(f"SELECT id FROM main.users;")
+        c = c.fetchall()
+        return [x[0] for x in c]
+
     def get(self, column: str, userid: int):
         c = self.connector.execute(f"SELECT {column} FROM main.users WHERE id = ?;", (str(userid),))
         return c.fetchone()[0]
@@ -69,9 +74,16 @@ class Database(object):
         self.connector.commit()
         return True
 
+    def has_item(self, userid: int, itemid: int, amount=1):
+        c = self.connector.execute(f"SELECT EXISTS(SELECT id FROM main.inv_{userid} WHERE id = ? AND amount >= ?);", (itemid, amount))
+        return c.fetchone()[0]
+
     def get_eff(self, userid: int):
         c = self.connector.execute(f"SELECT * FROM main.eff_{userid}")
-        return c.fetchall()
+        d = {}
+        for k, i in c.fetchall():
+            d[k] = i
+        return d
 
     def give_eff(self, userid: int, name: str, amount=1):
         self.connector.execute(f"INSERT OR IGNORE INTO main.eff_{userid} (name) VALUES (?);", (name,))
@@ -90,3 +102,7 @@ class Database(object):
 
         self.connector.commit()
         return True
+
+    def has_eff(self, userid: int, name: str, amount=1):
+        c = self.connector.execute(f"SELECT EXISTS(SELECT name FROM main.inv_{userid} WHERE name = ? AND amount >= ?);", (name, amount))
+        return c.fetchone()[0]
