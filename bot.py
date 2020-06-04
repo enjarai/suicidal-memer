@@ -74,7 +74,6 @@ async def item_lootbox(ctx):
     embed = discord.Embed(title="Loot Box opened!", description="You got:", colour=discord.Colour(0x70a231))
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
     for i in range(3):
-        print(i)
         weights = []
         for item in index.items:
             weights.append(item.lootboxweight)
@@ -576,10 +575,8 @@ async def points(ctx, *args):
         vaultsnum = 0
 
     for i in range(vaultsnum):
-        print(i)
         vaults.append("<:vault:699266653791322172>")
     for i in range(3 - vaultsnum):
-        print(i)
         vaults.append("⭕")
     if "uno" in memeff:
         vaults.append("(<:unoreverse:699194687646597130>)")
@@ -858,6 +855,22 @@ async def helpiminfuckingdebt(ctx):
         db.update_bal(ctx.author.id, -bal)
     else:
         await ctx.send("no ur not")
+
+#================================= item quick-commands =================================#
+
+@client.command()
+async def rob(ctx, arg1):
+    await use(ctx, "mask", arg1)
+
+@client.command()
+async def nuke(ctx, arg1):
+    await use(ctx, "nuke", arg1)
+
+@client.command()
+async def nuke2(ctx, arg1):
+    await use(ctx, "nuke2", arg1)
+
+#================================= /item quick-commands ================================#
 
 if channelid:
     bgtask = client.loop.create_task(background())
