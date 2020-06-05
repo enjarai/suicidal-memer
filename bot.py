@@ -10,6 +10,8 @@ import configparser
 import glob
 import emoji
 import datetime
+import sys
+import traceback
 client = commands.Bot(command_prefix=("plzz ", "Plzz ", "plz ", "Plz "))
 client.remove_command("help")
 
@@ -543,6 +545,20 @@ async def background4():
             print("Waiting {} seconds".format(slp))
             await asyncio.sleep(slp)
 
+# @client.event
+# async def on_command_error(ctx, exception):
+#     if hasattr(ctx.command, 'on_error'):
+#         return
+
+#     print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+#     traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
+
+#     await ctx.send("")
+
+@client.event
+async def on_member_join(member):
+    db.setup_user(member.id)
+
 @client.event
 async def on_message(message):
     if not message.author.id == client.user.id:
@@ -551,7 +567,6 @@ async def on_message(message):
         if not message.author.id == lastid[str(message.channel.id)]:
             lastid[str(message.channel.id)] = message.author.id
 
-            db.setup_user(message.author.id) # move this to on_member_join event
             db.update("xp", message.author.id, 1)
             if db.get("xp", message.author.id) >= levelcost:
                 db.update("xp", message.author.id, -levelcost)
