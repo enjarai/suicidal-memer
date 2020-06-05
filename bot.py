@@ -177,7 +177,7 @@ async def item_mask(ctx, member):
     if amount:
         memeff = db.get_eff(member.id)
         if "uno" in memeff:
-            # amount = int(amount / 2)
+            amount = amount * 2
             db.update_bal(member.id, amount)
             db.update_bal(ctx.author.id, -amount)
             await ctx.send(ctx.author.mention + f": You robbed {member.mention}, but they had an uno reverse card active! you lost `{amount}` points!")
@@ -246,7 +246,7 @@ async def item_fortune(ctx):
     """
     await ctx.send(ctx.author.mention + f""": You cracked open the cookie, the little piece of paper inside says:\n```{subprocess.check_output(["/usr/games/fortune"]).decode("utf-8")}```""")
     if random.randint(1, 10) == 1:
-        cash = random.randint(5, 30)
+        cash = random.randint(50, 300)
         await ctx.send(ctx.author.mention + f""": There were also {cash} <:coin:632592319245451286> hidden inside!""")
         db.update_bal(ctx.author.id, cash)
         # add item drops rarely, better than lootbox?
@@ -283,7 +283,7 @@ async def item_nuke(ctx, member):
         amount = random.randint(0, memscore)
     memeff = db.get_eff(member.id)
     if "uno" in memeff:
-        # amount = int(amount / 2)
+        amount = amount * 2
         db.update_bal(member.id, int(amount / 2))
         db.update_bal(ctx.author.id, -amount)
         await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
@@ -329,7 +329,7 @@ async def item_nuke2(ctx, member):
         amount = random.randint(int(memscore * 0.4), memscore)
     memeff = db.get_eff(member.id)
     if "uno" in memeff:
-        # amount = int(amount / 2)
+        amount = amount * 2
         db.update_bal(member.id, int(amount / 2))
         db.update_bal(ctx.author.id, -amount)
         await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, but they had an uno reverse card active! you lost `{amount}` points, and half of them were destroyed!")
@@ -365,7 +365,7 @@ async def item_uno(ctx):
     The uno card can reverse a single rob or nuke.
     After that it just disappears. like, \*poof\*, and its gone.
 
-    *\* this item is pretty good at keeping you safe, if you can afford it...*
+    *\* oh yeah, and it doubles the amount robbed. so thats nice...*
     """
     if "uno" in db.get_eff(ctx.author.id):
         await ctx.send(ctx.author.mention + f""": You already an uno card active""")
@@ -452,6 +452,35 @@ index.add(
     buy=300,
     sell=150,
     useargs="m"
+)
+
+
+index.add(
+    # use=item_rulebook,
+    name="Uno Rulebook",
+    emoji="<:rulebook:718503942153044081>",
+    aliases=[],
+    description="Another counter item",
+    # lootboxmax=1,
+    # lootboxweight=20,
+    # buy=1400,
+    # sell=1000,
+    useargs="m"
+)
+
+
+index.add(
+    # use=item_rulebook,
+    name="Unknown",
+    # emoji="<:rulebook:718503942153044081>",
+    aliases=["nuke3"],
+    description="",
+    # lootboxmax=1,
+    # lootboxweight=20,
+    buy=0,
+    sell=0,
+    useargs="m",
+    genaliases=False
 )
 
 #=================================== /item defintions ==================================#
@@ -744,7 +773,7 @@ async def use(ctx, *args):
         return
 
     item = index.get_by_alias(args[0])
-    if not item:
+    if not item or not item.use:
         await ctx.send("Unknown item that")
         return
 
@@ -829,7 +858,7 @@ async def shop(ctx, buythis=None, amount=1):
         embed = discord.Embed(title="For sale:", colour=discord.Colour(0x70a231))
         embed.set_author(name="yo whattup come buy some stuffs", icon_url=client.user.avatar_url)
         for item in index.items:
-            if item.buy:
+            if item.buy and item.description:
                 embed.add_field(name=f"**{str(item)}** - {item.buy} Points", value=item.description, inline=False)
         await ctx.send(embed=embed)
         return
@@ -840,7 +869,7 @@ async def shop(ctx, buythis=None, amount=1):
         return
 
     if db.get_bal(ctx.author.id) >= item.buy * amount:
-        await ctx.send(f"{ctx.author.mention}: you bought {amount} {str(item)}")
+        await ctx.send(f"{ctx.author.mention}: you bought {amount} {str(item)} for {item.sell * amount} <:coin:632592319245451286>")
         db.update_bal(ctx.author.id, -(item.buy * amount))
         db.give_item(ctx.author.id, item.id, amount)
     else:

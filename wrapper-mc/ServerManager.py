@@ -32,9 +32,9 @@ class ServerManager(object):
         #self.message('give @a minecraft:diamond 5', True)
         time.sleep(10)
         self.message('stop', True)
+        time.sleep(30)
         self.online = False
         self.process.terminate()
-        time.sleep(5)
 
     def crash_check(self):
         self.process.poll()
