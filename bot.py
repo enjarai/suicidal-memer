@@ -461,7 +461,7 @@ async def item_rulebook(ctx, member):
     This item can remove a single active ~~vault~~ **uno cards** from someone's balance.
     Once there are no ~~vaults~~ **uno cards** left it's pretty much useless...
 
-    *\* okay so i might have made this a bit too common...*
+    *\* okay so i might have made this a bit too uncommon...*
     """
     if "uno" in db.get_eff(member.id):
         db.rem_eff(member.id, "uno")
