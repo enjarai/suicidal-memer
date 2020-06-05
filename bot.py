@@ -454,17 +454,33 @@ index.add(
     useargs="m"
 )
 
+async def item_rulebook(ctx, member):
+    """
+    Wasting masks and nukes on removing ~~vaults~~ **uno cards** is not very nice is it?
+    
+    This item can remove a single active ~~vault~~ **uno cards** from someone's balance.
+    Once there are no ~~vaults~~ **uno cards** left it's pretty much useless...
+
+    *\* okay so i might have made this a bit too common...*
+    """
+    if "uno" in db.get_eff(member.id):
+        db.rem_eff(member.id, "uno")
+        await ctx.send(ctx.author.mention + f""": You annihilated one of {member.mention}'s uno card!'""")
+    else:
+        await ctx.send(ctx.author.mention + f""": {member.mention} has no uno card active""")
+        return False
+    return True
 
 index.add(
-    # use=item_rulebook,
+    use=item_rulebook,
     name="Uno Rulebook",
     emoji="<:rulebook:718503942153044081>",
     aliases=[],
     description="Another counter item",
-    # lootboxmax=1,
-    # lootboxweight=20,
-    # buy=1400,
-    # sell=1000,
+    lootboxmax=1,
+    lootboxweight=20,
+    buy=1400,
+    sell=1000,
     useargs="m"
 )
 
