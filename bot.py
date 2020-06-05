@@ -869,7 +869,7 @@ async def shop(ctx, buythis=None, amount=1):
         return
 
     if db.get_bal(ctx.author.id) >= item.buy * amount:
-        await ctx.send(f"{ctx.author.mention}: you bought {amount} {str(item)} for {item.sell * amount} <:coin:632592319245451286>")
+        await ctx.send(f"{ctx.author.mention}: you bought {amount} {str(item)} for {item.buy * amount} <:coin:632592319245451286>")
         db.update_bal(ctx.author.id, -(item.buy * amount))
         db.give_item(ctx.author.id, item.id, amount)
     else:
