@@ -49,6 +49,7 @@ trivia = {
 }
 triviamultiplier = 10
 levelcost = 60
+lootboxrolls = 3
 
 effectemoji = {
     "dice": "<:dice:632295947552030741>",
@@ -75,19 +76,30 @@ async def item_lootbox(ctx):
     """
     embed = discord.Embed(title="Loot Box opened!", description="You got:", colour=discord.Colour(0x70a231))
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-    for i in range(3):
+    
+    itemsadd = []
+    for i in range(lootboxrolls):
         weights = []
         for item in index.items:
             weights.append(item.lootboxweight)
         addthis = random.choices(index.items, weights)[0]
         amount = random.randint(1, addthis.lootboxmax)
+        itemsadd.append((addthis, amount))
+        embed.add_field(name=":grey_question:", value="\u200b", inline=True)
+
+    message = await ctx.send(embed=embed)
+    for addthis, amount in itemsadd:
+        await asyncio.sleep(0.5)
+        i = itemsadd.index((addthis, amount))
+        embed.remove_field(i)
         if addthis.id == 0:
-            embed.add_field(name="<:coin:632592319245451286>", value=f"{amount} Points", inline=True)
+            embed.insert_field_at(i, name="<:coin:632592319245451286>", value=f"{amount} Points", inline=True)
             db.update_bal(ctx.author.id, amount)
         else:
-            embed.add_field(name=addthis.emoji, value=f"{amount}x {addthis.name}", inline=True)
+            embed.insert_field_at(i, name=addthis.emoji, value=f"{amount}x {addthis.name}", inline=True)
             db.give_item(ctx.author.id, addthis.id, amount)
-    await ctx.send(embed=embed)
+        await message.edit(embed=embed)
+        
     return True
 
 index.add(
