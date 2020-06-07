@@ -617,8 +617,7 @@ async def on_message(message):
                 db.update("xp", message.author.id, -levelcost)
                 db.update("level", message.author.id, 1)
                 lootbox = index.get_by_id(1)
-                await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{db.get("level", message.author.id)}`""")
-                await message.channel.send(f"{message.author.mention}: Wow, you found a {str(lootbox)}!")
+                await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{db.get("level", message.author.id)}`\nWow, you found a {str(lootbox)}!""")
                 db.give_item(message.author.id, lootbox.id, 1)
     await client.process_commands(message)
 
@@ -663,10 +662,13 @@ async def int_gamble(ctx, amount: int, odds):
 
     if random.choices([True, False], odds)[0]:
         db.update_bal(ctx.author.id, amount)
-        await ctx.send("Odds: {}%\nYou won! Your bet was doubled!\nNew balance: `{}`".format(odds[0], db.get_bal(ctx.author.id)))
+        embed = discord.Embed(title="You won!", description=f"Your bet was doubled!\nOdds: {odds[0]}%\n**New balance:** {db.get_bal(ctx.author.id)} <:coin:632592319245451286>", colour=discord.Colour(0x70a231))
     else:
         db.update_bal(ctx.author.id, -amount)
-        await ctx.send("Odds: {}%\nYou lost! This is so sad...\nNew balance: `{}`".format(odds[0], db.get_bal(ctx.author.id)))
+        embed = discord.Embed(title="You lost!", description=f"This is so sad...\nOdds: {odds[0]}%\n**New balance:** {db.get_bal(ctx.author.id)} <:coin:632592319245451286>", colour=discord.Colour(0x70a231))
+
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+    await ctx.send(embed=embed)
 
     return True
 
