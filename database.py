@@ -11,7 +11,7 @@ class Database(object):
             xp INTEGER NOT NULL DEFAULT 0,
             lastsalary TEXT NOT NULL DEFAULT ""
         );""") 
-        # ALTER TABLE main.users ADD lastsalary TEXT NOT NULL DEFAULT 0;
+        # ALTER TABLE main.users ADD lastsalary TEXT NOT NULL DEFAULT "";
         # INSERT INTO main.users (id, balance, level, xp) SELECT id, balance, level, xp FROM _users_old
 
         self.connector.commit()

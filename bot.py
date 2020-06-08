@@ -648,7 +648,7 @@ async def points(ctx, *args):
     await ctx.send(embed=embed)
 
 
-@client.command(aliases=["payme"])
+@client.command(aliases=["payme", "daily"])
 async def salary(ctx):
     now = datetime.datetime.now()
     time = db.get("lastsalary", ctx.author.id)
@@ -667,7 +667,7 @@ async def salary(ctx):
         money = index.get_by_id(0)
         await ctx.send(f"""{ctx.author.mention}: Aight, here's your daily salary: 500 {money.emoji} and a {str(lootbox)}""")
     else:
-        await ctx.send("Leave me alone, you've already had your salary today!")
+        await ctx.send(f"""Leave me alone, you've already had your salary today!\nNext salary can be claimed in `{''.join(str(time + datetime.timedelta(days=1) - now).split('.')[:1])}`""")
 
 
 async def int_gamble(ctx, amount: int, odds):
