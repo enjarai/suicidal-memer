@@ -8,8 +8,11 @@ class Database(object):
             id INTEGER PRIMARY KEY UNIQUE NOT NULL,
             balance INTEGER NOT NULL DEFAULT 0,
             level INTEGER NOT NULL DEFAULT 0,
-            xp INTEGER NOT NULL DEFAULT 0
-        );""")
+            xp INTEGER NOT NULL DEFAULT 0,
+            lastsalary TEXT NOT NULL DEFAULT ""
+        );""") 
+        # ALTER TABLE main.users ADD lastsalary TEXT NOT NULL DEFAULT 0;
+        # INSERT INTO main.users (id, balance, level, xp) SELECT id, balance, level, xp FROM _users_old
 
         self.connector.commit()
 
@@ -42,6 +45,12 @@ class Database(object):
 
     def update(self, column: str, userid: int, amount: int):
         self.connector.execute(f"UPDATE main.users SET {column} = {column} + ? WHERE id = ?;", (str(amount), str(userid)))
+
+        self.connector.commit()
+        return True
+
+    def set(self, column: str, userid: int, to: int):
+        self.connector.execute(f"UPDATE main.users SET {column} = ? WHERE id = ?;", (str(to), str(userid)))
 
         self.connector.commit()
         return True

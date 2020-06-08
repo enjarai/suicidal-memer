@@ -604,6 +604,7 @@ async def background4():
 async def on_member_join(member):
     db.setup_user(member.id)
 
+
 @client.event
 async def on_message(message):
     if not message.author.id == client.user.id:
@@ -620,6 +621,7 @@ async def on_message(message):
                 await message.channel.send(f"""{message.author.mention}: Holy shit, you leveled up! Now level `{db.get("level", message.author.id)}`\nWow, you found a {str(lootbox)}!""")
                 db.give_item(message.author.id, lootbox.id, 1)
     await client.process_commands(message)
+
 
 @client.command(aliases=["bal", "money", "status"])
 async def points(ctx, *args):
@@ -645,8 +647,35 @@ async def points(ctx, *args):
     embed.set_author(name=member.name, icon_url=member.avatar_url)
     await ctx.send(embed=embed)
 
+
+@client.command(aliases=["payme"])
+async def salary(ctx):
+    now = datetime.datetime.now()
+    time = db.get("lastsalary", ctx.author.id)
+
+    if not time:
+        time = now - datetime.timedelta(days=10)
+    else:
+        time = datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
+
+    if time + datetime.timedelta(days=1) < now:
+        db.give_item(ctx.author.id, 1, 1)
+        db.update_bal(ctx.author.id, 500)
+        db.set("lastsalary", ctx.author.id, datetime.datetime.strftime(now, "%Y-%m-%dT%H:%M:%S"))
+
+        lootbox = index.get_by_id(1)
+        money = index.get_by_id(0)
+        await ctx.send(f"""{ctx.author.mention}: Aight, here's your daily salary: 500 {money.emoji} and a {str(lootbox)}""")
+    else:
+        await ctx.send("Leave me alone, you've already had your salary today!")
+
+
 async def int_gamble(ctx, amount: int, odds):
     authbal = db.get_bal(ctx.author.id)
+
+    if amount > 1000 or amount < -1000:
+        await ctx.send("You can't gamble more than 1000 points at a time")
+        return False
 
     if amount == 0:
         await ctx.send("Thats not gonna work m8")
@@ -672,6 +701,7 @@ async def int_gamble(ctx, amount: int, odds):
 
     return True
 
+
 @client.command(aliases=["bet", "casino"])
 async def gamble(ctx, amount=None):
     """Come on, have a try. You have a 50% chance to double your bet"""
@@ -689,9 +719,11 @@ async def gamble(ctx, amount=None):
 
     await int_gamble(ctx, amount, odds)
 
+
 @gamble.error
 async def gamble_error(ctx, error):
     await ctx.send("Please enter an amount, you have a 50% chance to double your bet")
+
 
 @client.command(aliases=["inv", "items"])
 async def inventory(ctx, *args):
@@ -708,6 +740,7 @@ async def inventory(ctx, *args):
             itemobj = index.get_by_id(item[0])
             embed.add_field(name=itemobj.emoji, value=f"""{item[1]}x {itemobj.name}""", inline=True)
     await ctx.send(embed=embed)    
+
 
 @client.command()
 @commands.is_owner()
@@ -726,6 +759,7 @@ async def gimme(ctx, giv: int, user=None):
     db.give_item(member.id, item.id, 1)
     await ctx.send(f"""{member.mention}: i got u one of them {str(item)}, you filthy cheater""")
 
+
 @client.command()
 @commands.is_owner()
 async def gimmecash(ctx, giv: int, user=None):
@@ -742,6 +776,7 @@ async def gimmecash(ctx, giv: int, user=None):
     db.update_bal(member.id, giv)
     await ctx.send(f"""{member.mention}: i got u some of them cash, you filthy cheater""")
 
+
 @client.command()
 @commands.is_owner()
 async def createcounter(ctx, year: int, month: int, day: int, hour: int):
@@ -755,6 +790,7 @@ async def createcounter(ctx, year: int, month: int, day: int, hour: int):
     })
     with open("counters.json", "w") as f:
         json.dump(counters, f, indent=4)
+
 
 @client.command(aliases=["info", "tellmemore"])
 async def iteminfo(ctx, *, item=""):
@@ -777,9 +813,11 @@ async def iteminfo(ctx, *, item=""):
     else:
         await ctx.send("That item does not exist...")
 
+
 @iteminfo.error
 async def iteminfo_error(ctx, error):
     await ctx.send("Please specify an item.")
+
 
 @client.command(aliases=["open", "eat"])
 async def use(ctx, *args):
@@ -830,9 +868,11 @@ async def use(ctx, *args):
     if rmitem:
         db.rem_item(authorid, item.id)
 
+
 @use.error
 async def use_error(ctx, error):
     await ctx.send("Internal error: " + str(error))
+
 
 @client.command(aliases=["xp"])
 async def level(ctx, *args):
@@ -846,6 +886,7 @@ async def level(ctx, *args):
         await ctx.send(f"""{member.mention}: Yeah boi, u r level `{level}` & ur `{xp}/{levelcost}` to the next level""")
     else:
         await ctx.send(f"""{member.mention}: Is level `{level}` & theyr `{xp}/{levelcost}` to the next level""")
+
 
 @client.command(aliases=["richest", "leaderboard"])
 async def baltop(ctx):
@@ -864,10 +905,12 @@ async def baltop(ctx):
                 amount += 1
     await ctx.send(embed=embed)
 
+
 @client.command(aliases=["coin"])
 async def coinflip(ctx):
     """I think its pretty self-explanatory tbh"""
     await ctx.send(random.choice(["Heads!", "Tails!"]))
+
 
 @client.command(aliases=["buy"])
 async def shop(ctx, buythis=None, amount=1):
@@ -892,7 +935,8 @@ async def shop(ctx, buythis=None, amount=1):
         db.give_item(ctx.author.id, item.id, amount)
     else:
         await ctx.send("U ain't got da cash m8")
-                
+
+
 @client.command(aliases=["sellitem"])
 async def sell(ctx, sellthis, amount=1):
     """Yo whattup come buy some stuffs"""
@@ -908,6 +952,7 @@ async def sell(ctx, sellthis, amount=1):
     await ctx.send(f"{ctx.author.mention}: you sold {amount} {str(item)} for {item.sell * amount} <:coin:632592319245451286>")
     db.update_bal(ctx.author.id, item.sell * amount)
     db.rem_item(ctx.author.id, item.id, amount)
+
 
 @client.command()
 async def helpiminfuckingdebt(ctx):
