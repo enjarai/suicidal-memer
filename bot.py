@@ -940,6 +940,24 @@ async def baltop(ctx):
     await ctx.send(embed=embed)
 
 
+@client.command(aliases=["toprank"])
+async def ranks(ctx):
+    """See who to rob"""
+    top = []
+    for userid in db.all_users():
+        top.append((userid, db.get("level", userid)))
+    top = sorted(top, key=operator.itemgetter(1))[::-1]
+    embed = discord.Embed(title="Top 10 levels:", description="━━━━━━━━━━━━━━━", colour=discord.Colour(0x70a231))
+    amount = 0
+    for user in top:
+        if top.index(user) < (amount + 10):
+            if ctx.guild.get_member(int(user[0])):
+                embed.add_field(name=str(top.index(user) + 1 - amount) + ". " + ctx.guild.get_member(int(user[0])).display_name, value=f"""level: {user[1]}""", inline=False)
+            else:
+                amount += 1
+    await ctx.send(embed=embed)
+
+
 @client.command(aliases=["coin"])
 async def coinflip(ctx):
     """I think its pretty self-explanatory tbh"""
