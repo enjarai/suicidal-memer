@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 class Database(object):
     def __init__(self, filename: str):
@@ -30,6 +31,14 @@ class Database(object):
             name TEXT PRIMARY KEY UNIQUE NOT NULL,
             amount INTEGER NOT NULL DEFAULT 0,
             CHECK (amount >= 0)
+        );""")
+        self.connector.execute(f"""CREATE TABLE IF NOT EXISTS main.hist_{userid} (
+            id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+            time TEXT NOT NULL,
+            type TEXT NOT NULL,
+            affected INTEGER NOT NULL DEFAULT 0,
+            amount INTEGER NOT NULL DEFAULT 0,
+            handled INTEGER NOT NULL DEFAULT 0
         );""")
 
         self.connector.commit()
@@ -113,5 +122,31 @@ class Database(object):
         return True
 
     def has_eff(self, userid: int, name: str, amount=1):
-        c = self.connector.execute(f"SELECT EXISTS(SELECT name FROM main.inv_{userid} WHERE name = ? AND amount >= ?);", (name, amount))
+        c = self.connector.execute(f"SELECT EXISTS(SELECT name FROM main.inv_{userid} WHERE name = ? AND amount >= ?);", (name, str(amount)))
         return c.fetchone()[0]
+
+    def log(self, userid: int, htype: str, affected=0, amount=0):
+        now = datetime.datetime.now()
+        nowstr = datetime.datetime.strftime(now, "%Y-%m-%dT%H:%M:%S")
+
+        self.connector.execute(f"INSERT INTO main.hist_{userid} (time, type, affected, amount) VALUES (?, ?, ?, ?);", (nowstr, htype, str(affected), str(amount)))
+
+        self.connector.commit()
+        return True
+
+    def latest_log(self, userid: int, htype: str, limit=None):
+        if not limit:
+            limit = datetime.datetime.now() - datetime.timedelta(hours=1)
+
+        try:
+            c = self.connector.execute(f"SELECT MAX(id), time, affected, amount FROM main.hist_{userid} WHERE type = ? AND handled = 0;", (htype,))
+            entryid, time, affected, amount = c.fetchone()
+            if not datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S") > limit:
+                return None
+        except TypeError:
+            return None
+
+        self.connector.execute(f"UPDATE main.hist_{userid} SET handled = 1 WHERE id = ?;", (str(entryid),))
+        
+        self.connector.commit()
+        return affected, amount

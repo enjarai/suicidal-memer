@@ -52,7 +52,7 @@ levelcost = 60
 
 effectemoji = {
     "dice": "<:dice:632295947552030741>",
-    "uno": "<:unoreverse:699194687646597130>",
+    "uno": "<:unoshield:720992427216863302>",
     "vault": "<:vault:699266653791322172>"
 }
 
@@ -188,6 +188,7 @@ async def item_mask(ctx, member):
         else:
             db.update_bal(member.id, -amount)
             db.update_bal(ctx.author.id, amount)
+            db.log(member.id, "steal", ctx.author.id, amount)
             await ctx.send(ctx.author.mention + f": You robbed {member.mention}, you managed to get away with `{amount}` points!")
     else:
         await ctx.send(ctx.author.mention + f": You cant rob {member.mention}! They're way too poor, thats pathetic... *shakes head disapprovingly*")
@@ -294,6 +295,7 @@ async def item_nuke(ctx, member):
     else:
         db.update_bal(member.id, -amount)
         db.update_bal(ctx.author.id, int(amount / 2))
+        db.log(member.id, "steal", ctx.author.id, amount)
         await ctx.send(ctx.author.mention + f": You yeeted a nuke at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
     return True
 
@@ -340,6 +342,7 @@ async def item_nuke2(ctx, member):
     else:
         db.update_bal(member.id, -amount)
         db.update_bal(ctx.author.id, int(amount / 2))
+        db.log(member.id, "steal", ctx.author.id, amount)
         await ctx.send(ctx.author.mention + f": You yeeted a nuke 2: electric boogaloo at {member.mention}, you stole `{amount}` points, but half of them were destroyed!")
     return True
 
@@ -357,7 +360,7 @@ index.add(
 )
 
 
-async def item_uno(ctx):
+async def item_unoshield(ctx):
     """
     Okay so we're playing uno now apparently,
     this acually seems pretty useful though.
@@ -371,14 +374,14 @@ async def item_uno(ctx):
         await ctx.send(ctx.author.mention + f""": You already an uno card active""")
         return False
     else:
-        await ctx.send(ctx.author.mention + f""": Uno Reverse Card activate! you are now protected from one rob/nuke""")
+        await ctx.send(ctx.author.mention + f""": Uno Reverse Shield activate! you are now protected from one rob/nuke""")
         db.give_eff(ctx.author.id, "uno")
     return True
 
 index.add(
-    use=item_uno,
-    name="Uno Reverse Card",
-    emoji="<:unoreverse:699194687646597130>",
+    use=item_unoshield,
+    name="Reverse Shield",
+    emoji="<:unoshield:720992427216863302>",
     aliases=[],
     description="Use this to ward off those pesky thieves once and for all",
     lootboxmax=1,
@@ -456,18 +459,18 @@ index.add(
 
 async def item_rulebook(ctx, member):
     """
-    Wasting masks and nukes on removing ~~vaults~~ **uno cards** is not very nice is it?
+    Wasting masks and nukes on removing ~~vaults~~ **reverse shields** is not very nice is it?
     
-    This item can remove a single active ~~vault~~ **uno cards** from someone's balance.
-    Once there are no ~~vaults~~ **uno cards** left it's pretty much useless...
+    This item can remove a single active ~~vault~~ **reverse shields** from someone's balance.
+    Once there are no ~~vaults~~ **reverse shields** left it's pretty much useless...
 
     *\* okay so i might have made this a bit too uncommon...*
     """
     if "uno" in db.get_eff(member.id):
         db.rem_eff(member.id, "uno")
-        await ctx.send(ctx.author.mention + f""": You annihilated one of {member.mention}'s uno card!'""")
+        await ctx.send(ctx.author.mention + f""": You annihilated {member.mention}'s reverse shield!""")
     else:
-        await ctx.send(ctx.author.mention + f""": {member.mention} has no uno card active""")
+        await ctx.send(ctx.author.mention + f""": {member.mention} has no reverse shield active""")
         return False
     return True
 
@@ -475,13 +478,14 @@ index.add(
     use=item_rulebook,
     name="Uno Rulebook",
     emoji="<:rulebook:718503942153044081>",
-    aliases=[],
+    aliases=["rulebook", "rules", "unorulebook"],
     description="Another counter item",
     lootboxmax=1,
     lootboxweight=20,
     buy=1400,
     sell=1000,
-    useargs="m"
+    useargs="m",
+    genaliases=False
 )
 
 
@@ -497,6 +501,41 @@ index.add(
     sell=0,
     useargs="m",
     genaliases=False
+)
+
+
+async def item_unocard(ctx):
+    """
+    This uno card seems different...
+    
+    If this item is used within one hour of a rob/nuke the effect can be reversed, making the attacker lose points!
+    This is *not* limited to only the most recent rob/nuke.
+
+    *\* this seemed a bit more appropriate for the uno card*
+    """
+    dbreturn = db.latest_log(ctx.author.id, "steal")
+    try:
+        affected, amount = dbreturn
+    except TypeError:
+        await ctx.send(ctx.author.mention + f""": You have no recent robs to reverse""")
+        return False
+
+    db.update_bal(affected, -amount * 2)
+    db.update_bal(ctx.author.id, amount * 2)
+    await ctx.send(ctx.author.mention + f""": You reversed {client.get_user(affected).mention}'s rob of {amount} {index.get_by_id(0).emoji}!""")
+
+    return True
+
+index.add(
+    use=item_unocard,
+    name="Uno Reverse Card",
+    emoji="<:unoreverse2:721018745790922808>",
+    aliases=[],
+    description="Reverse that shit!",
+    lootboxmax=1,
+    lootboxweight=300,
+    buy=500,
+    sell=250
 )
 
 #=================================== /item defintions ==================================#
@@ -600,19 +639,19 @@ async def background4():
 
 #     await ctx.send("")
 
-@client.event
-async def on_member_join(member):
-    db.setup_user(member.id)
+# @client.event
+# async def on_member_join(member):
+#     db.setup_user(member.id)
 
 
 @client.event
 async def on_message(message):
     if not message.author.id == client.user.id:
+        db.setup_user(message.author.id)
         if not str(message.channel.id) in lastid:
             lastid[str(message.channel.id)] = 0
         if not message.author.id == lastid[str(message.channel.id)]:
             lastid[str(message.channel.id)] = message.author.id
-
             db.update("xp", message.author.id, 1)
             if db.get("xp", message.author.id) >= levelcost:
                 db.update("xp", message.author.id, -levelcost)
@@ -636,11 +675,11 @@ async def points(ctx, *args):
         vaultsnum = 0
 
     for i in range(vaultsnum):
-        vaults.append("<:vault:699266653791322172>")
+        vaults.append(effectemoji["vault"])
     for i in range(3 - vaultsnum):
         vaults.append("⭕")
     if "uno" in memeff:
-        vaults.append("(<:unoreverse:699194687646597130>)")
+        vaults.append("(" + effectemoji["uno"] + ")")
     vaults = " ".join(vaults)
 
     embed = discord.Embed(title="Status:", description=f"{db.get_bal(member.id)} <:coin:632592319245451286>\n**Active vaults:**\n{vaults}", colour=discord.Colour(0x70a231))
@@ -867,11 +906,6 @@ async def use(ctx, *args):
 
     if rmitem:
         db.rem_item(authorid, item.id)
-
-
-@use.error
-async def use_error(ctx, error):
-    await ctx.send("Internal error: " + str(error))
 
 
 @client.command(aliases=["xp"])
