@@ -529,7 +529,7 @@ async def item_unocard(ctx):
 index.add(
     use=item_unocard,
     name="Uno Reverse Card",
-    emoji="<:unoreverse2:721018745790922808>",
+    emoji="<:unoreverse:699194687646597130>",
     aliases=[],
     description="Reverse that shit!",
     lootboxmax=1,
