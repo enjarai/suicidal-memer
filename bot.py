@@ -365,13 +365,13 @@ async def item_unoshield(ctx):
     Okay so we're playing uno now apparently,
     this acually seems pretty useful though.
 
-    The uno card can reverse a single rob or nuke.
+    The reverse shield can reverse a single rob or nuke.
     After that it just disappears. like, \*poof\*, and its gone.
 
     *\* oh yeah, and it doubles the amount robbed. so thats nice...*
     """
     if "uno" in db.get_eff(ctx.author.id):
-        await ctx.send(ctx.author.mention + f""": You already an uno card active""")
+        await ctx.send(ctx.author.mention + f""": You already have a reverse shield active""")
         return False
     else:
         await ctx.send(ctx.author.mention + f""": Uno Reverse Shield activate! you are now protected from one rob/nuke""")
@@ -382,12 +382,13 @@ index.add(
     use=item_unoshield,
     name="Reverse Shield",
     emoji="<:unoshield:720992427216863302>",
-    aliases=[],
+    aliases=["unoshield", "reverseshield", "shield"],
     description="Use this to ward off those pesky thieves once and for all",
     lootboxmax=1,
     lootboxweight=40,
     buy=1200,
-    sell=800
+    sell=800,
+    genaliases=False
 )
 
 
@@ -478,7 +479,7 @@ index.add(
     use=item_rulebook,
     name="Uno Rulebook",
     emoji="<:rulebook:718503942153044081>",
-    aliases=["rulebook", "rules", "unorulebook"],
+    aliases=["rulebook", "rules", "unorulebook", "book", "rule"],
     description="Another counter item",
     lootboxmax=1,
     lootboxweight=20,
@@ -530,7 +531,7 @@ index.add(
     use=item_unocard,
     name="Uno Reverse Card",
     emoji="<:unoreverse:699194687646597130>",
-    aliases=[],
+    aliases=["unoreverse"],
     description="Reverse that shit!",
     lootboxmax=1,
     lootboxweight=300,
