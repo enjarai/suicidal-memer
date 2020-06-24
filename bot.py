@@ -965,6 +965,15 @@ async def coinflip(ctx):
     await ctx.send(random.choice(["Heads!", "Tails!"]))
 
 
+@client.command(aliases=["coin"])
+async def choose(ctx, *args):
+    """I think its pretty self-explanatory tbh"""
+    if len(args) > 1:
+        await ctx.send(random.choice(args))
+    else:
+        await ctx.send("come on, gimme somethin to work with here...")
+
+
 @client.command(aliases=["buy"])
 async def shop(ctx, buythis=None, amount=1):
     """Yo whattup come buy some stuffs"""
