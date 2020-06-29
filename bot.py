@@ -1050,14 +1050,14 @@ async def nuke2(ctx, arg1):
 
 @trubot.command()
 async def tru(ctx):
-    await ctx.send(f"**Enabling TruBot v{truversion}**")
+    await ctx.send(f"> **Enabling TruBot v{truversion}**")
     for i in range(3):
         await asyncio.sleep(1)
-        await ctx.send("**.**")
-    await ctx.send("**    Tru**")
-    await ctx.send(f"**Disabling TruBot v{truversion}**")
+        await ctx.send("> **.**")
+    await ctx.send("> **Tru**")
+    await ctx.send(f"> **Disabling TruBot v{truversion}**")
     await asyncio.sleep(2)
-    await ctx.send(f"**Goodbye**")
+    await ctx.send(f"> **Goodbye**")
 
 
 #================================== \trubot section ====================================#
