@@ -29,6 +29,14 @@ triviaminwait = int(config.get("config", "triviaminwait"))
 triviamaxwait = int(config.get("config", "triviamaxwait"))
 index = ItemIndex("main")
 
+enabletrubot = config.getboolean('trubot', 'enabled') 
+trutoken = config.get("trubot", "token")
+truversion = config.get("trubot", "version")
+
+if enabletrubot:
+    trubot = commands.Bot(command_prefix="trubot ")
+    trubot.remove_command("help")
+
 #read "database"
 db = Database("userdata.db")
 
@@ -116,11 +124,6 @@ index.add(
     use=item_dice,
     name="Loaded Dice",
     emoji="<:dice:632295947552030741>",
-    aliases=[],
-    description="Give luck some help while gambling, one use (will rework this)",
-    lootboxmax=3,
-    lootboxweight=1000,
-    buy=200,
     sell=100,
     useargs="i"
 )
@@ -1041,7 +1044,32 @@ async def nuke2(ctx, arg1):
 
 #================================= /item quick-commands ================================#
 
+
+#=================================== trubot section ====================================#
+
+
+@trubot.command()
+async def tru(ctx):
+    await ctx.send(f"**Enabling TruBot v{truversion}**")
+    for i in range(3):
+        await asyncio.sleep(1)
+        await ctx.send("**.**")
+    await ctx.send("**    Tru**")
+    await ctx.send(f"**Disabling TruBot v{truversion}**")
+    await asyncio.sleep(2)
+    await ctx.send(f"**Goodbye**")
+
+
+#================================== \trubot section ====================================#
+
+
 if channelid:
     bgtask = client.loop.create_task(background())
 bgtask2 = client.loop.create_task(background2())
-client.run(token)
+#client.run(token)
+
+loop = asyncio.get_event_loop()
+loop.create_task(client.start(token))
+if enabletrubot:
+    loop.create_task(trubot.start(trutoken))
+loop.run_forever()

@@ -6,3 +6,10 @@ token = <token here>
 
 # Uncomment this to have a trivia channel
 #triviachannel = <channel id>
+
+
+# trubot config
+[trubot]
+# enabled = True
+# token = <token here>
+version = 1.0.0
