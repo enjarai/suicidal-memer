@@ -1062,6 +1062,8 @@ async def on_reaction_add(reaction, user):
         await asyncio.sleep(2)
         await channel.send(f"> **Goodbye**")
         trucooldown = False
+    else:
+        print("no")
         
 
 #================================== \trubot section ====================================#
