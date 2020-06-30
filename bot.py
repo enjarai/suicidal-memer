@@ -31,12 +31,12 @@ index = ItemIndex("main")
 
 enabletrubot = config.getboolean('trubot', 'enabled') 
 trutoken = config.get("trubot", "token")
-truversion = config.get("trubot", "version")
 
 if enabletrubot:
     trubot = commands.Bot(command_prefix="trubot ")
     trubot.remove_command("help")
-
+    trucooldown = False
+    truversion = config.get("trubot", "version")
 #read "database"
 db = Database("userdata.db")
 
@@ -1048,17 +1048,21 @@ async def nuke2(ctx, arg1):
 #=================================== trubot section ====================================#
 
 
-@trubot.command()
-async def tru(ctx):
-    await ctx.send(f"> **Enabling TruBot v{truversion}**")
-    for i in range(3):
-        await asyncio.sleep(1)
-        await ctx.send("> **.**")
-    await ctx.send("> **Tru**")
-    await ctx.send(f"> **Disabling TruBot v{truversion}**")
-    await asyncio.sleep(2)
-    await ctx.send(f"> **Goodbye**")
-
+@trubot.event
+async def on_reaction_add(reaction, user):
+    if reaction.emoji == "<:tru:727572339658850304>" and not trucooldown:
+        trucooldown = True
+        channel = reaction.message.channel
+        await channel.send(f"> **Enabling TruBot v{truversion}**")
+        for i in range(3):
+            await asyncio.sleep(1)
+            await channel.send("> **.**")
+        await channel.send(f"> {reaction.message.author.mention} **Tru**")
+        await channel.send(f"> **Disabling TruBot v{truversion}**")
+        await asyncio.sleep(2)
+        await channel.send(f"> **Goodbye**")
+        trucooldown = False
+        
 
 #================================== \trubot section ====================================#
 
