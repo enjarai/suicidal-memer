@@ -1050,7 +1050,7 @@ async def nuke2(ctx, arg1):
 
 @trubot.event
 async def on_reaction_add(reaction, user):
-    if reaction.emoji == "<:tru:727572339658850304>" and not trucooldown:
+    if reaction.emoji.id == 727572339658850304 and not trucooldown:
         trucooldown = True
         channel = reaction.message.channel
         await channel.send(f"> **Enabling TruBot v{truversion}**")
@@ -1062,8 +1062,6 @@ async def on_reaction_add(reaction, user):
         await asyncio.sleep(2)
         await channel.send(f"> **Goodbye**")
         trucooldown = False
-    else:
-        print("no")
         
 
 #================================== \trubot section ====================================#
