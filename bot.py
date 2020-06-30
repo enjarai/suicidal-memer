@@ -37,6 +37,7 @@ if enabletrubot:
     trubot.remove_command("help")
     trucooldown = False
     truversion = config.get("trubot", "version")
+    truemoji = config.get("trubot", "emoji")
 #read "database"
 db = Database("userdata.db")
 
@@ -1050,7 +1051,7 @@ async def nuke2(ctx, arg1):
 
 @trubot.event
 async def on_reaction_add(reaction, user):
-    if reaction.emoji.id == 727572339658850304 and not trucooldown:
+    if str(reaction.emoji) == truemoji:
         trucooldown = True
         channel = reaction.message.channel
         await channel.send(f"> **Enabling TruBot v{truversion}**")
