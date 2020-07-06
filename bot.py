@@ -494,21 +494,6 @@ index.add(
 )
 
 
-index.add(
-    # use=item_rulebook,
-    name="Unknown",
-    # emoji="<:rulebook:718503942153044081>",
-    aliases=["nuke3"],
-    description="",
-    # lootboxmax=1,
-    # lootboxweight=20,
-    buy=0,
-    sell=0,
-    useargs="m",
-    genaliases=False
-)
-
-
 async def item_unocard(ctx):
     """
     This uno card seems different...
@@ -990,8 +975,12 @@ async def shop(ctx, buythis=None, amount=1):
         await ctx.send(embed=embed)
         return
 
+    if amount < 1:
+        await ctx.send("I should have seen this coming...")
+        return
+
     item = index.get_by_alias(buythis)
-    if not item:
+    if not item or not item.buy:
         await ctx.send("I don't sell that")
         return
 
@@ -1006,8 +995,12 @@ async def shop(ctx, buythis=None, amount=1):
 @client.command(aliases=["sellitem"])
 async def sell(ctx, sellthis, amount=1):
     """Yo whattup come buy some stuffs"""
+    if amount < 1:
+        await ctx.send("I should have seen this coming...")
+        return
+
     item = index.get_by_alias(sellthis)
-    if not item:
+    if not item or not item.sell:
         await ctx.send("I don't buy that")
         return
 
