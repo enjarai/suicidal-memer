@@ -1,3 +1,7 @@
+# IM NOT PROUD OF THIS
+
+I made this discord bot ages ago, I'll be keeping it here for archival purposes, but I'm not proud of it.
+
 # Suicidal Memer
 
 This is a discord bot similar to Dank Memer (https://dankmemer.lol/) but way worse.
